@@ -1,0 +1,722 @@
+{
+  "packet": {
+    "artifact_id": "PACKET",
+    "confidence": "LIKELY_SYNTHETIC",
+    "aggregate_score": 0.814,
+    "findings": [
+      {
+        "heuristic": "SentenceStructureAnomaly",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "n=11 sentences; mean=29.5 words; stdev=36.0; CV=1.221 (threshold 0.45); entropy=2.85 (threshold 2.5)",
+        "nist_objectives": [
+          "3.12.1[a]",
+          "3.12.3[a]"
+        ],
+        "recommendation": "Sentence-structure distribution within human range."
+      },
+      {
+        "heuristic": "MappingDensity",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 1.0,
+        "evidence": "control_id_mentions=17; mechanism_tokens=0; ratio=17.00 (threshold 2.0)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+      },
+      {
+        "heuristic": "PromptLeakage",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "No LLM-residue phrases detected.",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Clean."
+      },
+      {
+        "heuristic": "ArtifactSpecificityIndex",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]",
+          "3.3.1[a]"
+        ],
+        "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+      },
+      {
+        "heuristic": "SentenceStructureAnomaly",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.07,
+        "evidence": "n=21 sentences; mean=20.3 words; stdev=8.5; CV=0.418 (threshold 0.45); entropy=3.17 (threshold 2.5)",
+        "nist_objectives": [
+          "3.12.1[a]",
+          "3.12.3[a]"
+        ],
+        "recommendation": "Sentence-structure distribution within human range."
+      },
+      {
+        "heuristic": "MappingDensity",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 1.0,
+        "evidence": "control_id_mentions=18; mechanism_tokens=4; ratio=4.50 (threshold 2.0)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+      },
+      {
+        "heuristic": "PromptLeakage",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.0,
+        "evidence": "No LLM-residue phrases detected.",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Clean."
+      },
+      {
+        "heuristic": "ArtifactSpecificityIndex",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.0,
+        "evidence": "mechanism_tokens=4; grounding_tokens=26; ratio=6.50 (floor 0.25)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]",
+          "3.3.1[a]"
+        ],
+        "recommendation": "Artifact specificity within expected range."
+      },
+      {
+        "heuristic": "SentenceStructureAnomaly",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "n=22 sentences; mean=12.9 words; stdev=9.5; CV=0.739 (threshold 0.45); entropy=3.66 (threshold 2.5)",
+        "nist_objectives": [
+          "3.12.1[a]",
+          "3.12.3[a]"
+        ],
+        "recommendation": "Sentence-structure distribution within human range."
+      },
+      {
+        "heuristic": "MappingDensity",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "control_id_mentions=11; mechanism_tokens=11; ratio=1.00 (threshold 2.0)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "recommendation": "Mechanism specificity within expected range."
+      },
+      {
+        "heuristic": "PromptLeakage",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "No LLM-residue phrases detected.",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Clean."
+      },
+      {
+        "heuristic": "ArtifactSpecificityIndex",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "mechanism_tokens=11; grounding_tokens=12; ratio=1.09 (floor 0.25)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]",
+          "3.3.1[a]"
+        ],
+        "recommendation": "Artifact specificity within expected range."
+      },
+      {
+        "heuristic": "BoilerplateCluster",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "Max Jaccard vs another control: 0.084 (peer=poam_batch_2026Q1)",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Narrative sufficiently distinct from peers."
+      },
+      {
+        "heuristic": "BoilerplateCluster",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.0,
+        "evidence": "Max Jaccard vs another control: 0.084 (peer=au_3_3_1_audit_logging)",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Narrative sufficiently distinct from peers."
+      },
+      {
+        "heuristic": "BoilerplateCluster",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "Max Jaccard vs another control: 0.073 (peer=au_3_3_1_audit_logging)",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Narrative sufficiently distinct from peers."
+      },
+      {
+        "heuristic": "TimestampRegularity",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 1.0,
+        "evidence": "n=11 intervals; mean=300.00s; variance=0.00; VMR=0.000; round-second fraction=1.00",
+        "nist_objectives": [
+          "3.3.1[a]",
+          "3.3.1[b]",
+          "3.3.8[a]"
+        ],
+        "recommendation": "Log timing is too regular for a real event stream. Request raw source log (syslog, CloudTrail, Azure Monitor) with microsecond fidelity."
+      }
+    ]
+  },
+  "per_artifact": {
+    "au_3_3_1_audit_logging": {
+      "artifact_id": "au_3_3_1_audit_logging",
+      "confidence": "LIKELY_SYNTHETIC",
+      "aggregate_score": 1.0,
+      "findings": [
+        {
+          "heuristic": "SentenceStructureAnomaly",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 0.0,
+          "evidence": "n=11 sentences; mean=29.5 words; stdev=36.0; CV=1.221 (threshold 0.45); entropy=2.85 (threshold 2.5)",
+          "nist_objectives": [
+            "3.12.1[a]",
+            "3.12.3[a]"
+          ],
+          "recommendation": "Sentence-structure distribution within human range."
+        },
+        {
+          "heuristic": "MappingDensity",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 1.0,
+          "evidence": "control_id_mentions=17; mechanism_tokens=0; ratio=17.00 (threshold 2.0)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+        },
+        {
+          "heuristic": "PromptLeakage",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 0.0,
+          "evidence": "No LLM-residue phrases detected.",
+          "nist_objectives": [
+            "3.12.4[a]"
+          ],
+          "recommendation": "Clean."
+        },
+        {
+          "heuristic": "ArtifactSpecificityIndex",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 0.0,
+          "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]",
+            "3.3.1[a]"
+          ],
+          "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+        },
+        {
+          "heuristic": "TimestampRegularity",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 1.0,
+          "evidence": "n=11 intervals; mean=300.00s; variance=0.00; VMR=0.000; round-second fraction=1.00",
+          "nist_objectives": [
+            "3.3.1[a]",
+            "3.3.1[b]",
+            "3.3.8[a]"
+          ],
+          "recommendation": "Log timing is too regular for a real event stream. Request raw source log (syslog, CloudTrail, Azure Monitor) with microsecond fidelity."
+        }
+      ]
+    },
+    "poam_batch_2026Q1": {
+      "artifact_id": "poam_batch_2026Q1",
+      "confidence": "LIKELY_SYNTHETIC",
+      "aggregate_score": 1.0,
+      "findings": [
+        {
+          "heuristic": "SentenceStructureAnomaly",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 0.07,
+          "evidence": "n=21 sentences; mean=20.3 words; stdev=8.5; CV=0.418 (threshold 0.45); entropy=3.17 (threshold 2.5)",
+          "nist_objectives": [
+            "3.12.1[a]",
+            "3.12.3[a]"
+          ],
+          "recommendation": "Sentence-structure distribution within human range."
+        },
+        {
+          "heuristic": "MappingDensity",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 1.0,
+          "evidence": "control_id_mentions=18; mechanism_tokens=4; ratio=4.50 (threshold 2.0)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+        },
+        {
+          "heuristic": "PromptLeakage",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 0.0,
+          "evidence": "No LLM-residue phrases detected.",
+          "nist_objectives": [
+            "3.12.4[a]"
+          ],
+          "recommendation": "Clean."
+        },
+        {
+          "heuristic": "ArtifactSpecificityIndex",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 0.0,
+          "evidence": "mechanism_tokens=4; grounding_tokens=26; ratio=6.50 (floor 0.25)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]",
+            "3.3.1[a]"
+          ],
+          "recommendation": "Artifact specificity within expected range."
+        },
+        {
+          "heuristic": "FactualPlausibility",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 1.0,
+          "evidence": "1 factual impossibility(ies) detected. First: 'Azure AD / Entra ID enforcing policy on AWS GovCloud workloads'.",
+          "nist_objectives": [
+            "3.12.4[a]",
+            "3.12.1[a]"
+          ],
+          "recommendation": "REJECT artifact and require correction. Azure AD Conditional Access enforces policy on Microsoft-resource sign-ins (M365, Azure, registered apps via SAML/OIDC). It does not natively enforce policy on AWS GovCloud compute, S3, or VPC resources. Cross-cloud requires AWS IAM Identity Center federation, AWS-side conditional access, or a third-party CASB. Verification: Verify the actual identity broker for AWS GovCloud workloads. If AWS IAM Identity Center is in use, document the trust relationship. If a CASB sits in front, document the CASB. Do not claim Azure AD Conditional Access alone is enforcing AWS-side access."
+        }
+      ]
+    },
+    "ssp_3_1_1_access_control": {
+      "artifact_id": "ssp_3_1_1_access_control",
+      "confidence": "LIKELY_SYNTHETIC",
+      "aggregate_score": 1.0,
+      "findings": [
+        {
+          "heuristic": "SentenceStructureAnomaly",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "n=22 sentences; mean=12.9 words; stdev=9.5; CV=0.739 (threshold 0.45); entropy=3.66 (threshold 2.5)",
+          "nist_objectives": [
+            "3.12.1[a]",
+            "3.12.3[a]"
+          ],
+          "recommendation": "Sentence-structure distribution within human range."
+        },
+        {
+          "heuristic": "MappingDensity",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "control_id_mentions=11; mechanism_tokens=11; ratio=1.00 (threshold 2.0)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "recommendation": "Mechanism specificity within expected range."
+        },
+        {
+          "heuristic": "PromptLeakage",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "No LLM-residue phrases detected.",
+          "nist_objectives": [
+            "3.12.4[a]"
+          ],
+          "recommendation": "Clean."
+        },
+        {
+          "heuristic": "ArtifactSpecificityIndex",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "mechanism_tokens=11; grounding_tokens=12; ratio=1.09 (floor 0.25)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]",
+            "3.3.1[a]"
+          ],
+          "recommendation": "Artifact specificity within expected range."
+        },
+        {
+          "heuristic": "FactualPlausibility",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 1.0,
+          "evidence": "1 factual impossibility(ies) detected. First: 'Azure AD / Entra ID enforcing policy on AWS GovCloud workloads'.",
+          "nist_objectives": [
+            "3.12.4[a]",
+            "3.12.1[a]"
+          ],
+          "recommendation": "REJECT artifact and require correction. Azure AD Conditional Access enforces policy on Microsoft-resource sign-ins (M365, Azure, registered apps via SAML/OIDC). It does not natively enforce policy on AWS GovCloud compute, S3, or VPC resources. Cross-cloud requires AWS IAM Identity Center federation, AWS-side conditional access, or a third-party CASB. Verification: Verify the actual identity broker for AWS GovCloud workloads. If AWS IAM Identity Center is in use, document the trust relationship. If a CASB sits in front, document the CASB. Do not claim Azure AD Conditional Access alone is enforcing AWS-side access."
+        }
+      ]
+    }
+  },
+  "factual_matches": {
+    "au_3_3_1_audit_logging": [],
+    "poam_batch_2026Q1": [
+      {
+        "label": "Azure AD / Entra ID enforcing policy on AWS GovCloud workloads",
+        "why": "Azure AD Conditional Access enforces policy on Microsoft-resource sign-ins (M365, Azure, registered apps via SAML/OIDC). It does not natively enforce policy on AWS GovCloud compute, S3, or VPC resources. Cross-cloud requires AWS IAM Identity Center federation, AWS-side conditional access, or a third-party CASB.",
+        "verify": "Verify the actual identity broker for AWS GovCloud workloads. If AWS IAM Identity Center is in use, document the trust relationship. If a CASB sits in front, document the CASB. Do not claim Azure AD Conditional Access alone is enforcing AWS-side access.",
+        "left_excerpt": "Azure AD",
+        "right_excerpt": "AWS GovCloud"
+      }
+    ],
+    "ssp_3_1_1_access_control": [
+      {
+        "label": "Azure AD / Entra ID enforcing policy on AWS GovCloud workloads",
+        "why": "Azure AD Conditional Access enforces policy on Microsoft-resource sign-ins (M365, Azure, registered apps via SAML/OIDC). It does not natively enforce policy on AWS GovCloud compute, S3, or VPC resources. Cross-cloud requires AWS IAM Identity Center federation, AWS-side conditional access, or a third-party CASB.",
+        "verify": "Verify the actual identity broker for AWS GovCloud workloads. If AWS IAM Identity Center is in use, document the trust relationship. If a CASB sits in front, document the CASB. Do not claim Azure AD Conditional Access alone is enforcing AWS-side access.",
+        "left_excerpt": "Azure AD",
+        "right_excerpt": "AWS GovCloud"
+      }
+    ]
+  },
+  "risk_per_artifact": {
+    "au_3_3_1_audit_logging": {
+      "artifact_id": "au_3_3_1_audit_logging",
+      "worst_poam_risk": "CRITICAL",
+      "est_cert_delay_weeks": [
+        6,
+        12
+      ],
+      "worst_fca_exposure": "DISCLOSURE_RISK",
+      "headline": "CRITICAL: estimated 6-12 week cert-date slip; assessor will likely fail one or more cited objectives.",
+      "deltas": [
+        {
+          "artifact_id": "au_3_3_1_audit_logging",
+          "heuristic": "MappingDensity",
+          "score": 1.0,
+          "poam_risk_level": "MEDIUM",
+          "est_cert_delay_weeks": [
+            1,
+            3
+          ],
+          "fca_exposure": "NONE",
+          "assessor_friction": "Likely outcome: assessor opens a MEDIUM-severity POA&M item and asks for a corrected artifact. Does not block conditional certification on its own but compounds with other findings.",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "why": "Mathematically perfect (1.00) cross-references between an SSP narrative and the NIST 800-171 control catalog are statistically improbable in real implementations. Assessors expect partial inheritance, gaps, and shared responsibility. A 1.00 mapping density is consistent with LLM output that 'fills in every cell' rather than reflecting a real boundary. This downgrades evidence credibility but is not itself a control failure."
+        },
+        {
+          "artifact_id": "au_3_3_1_audit_logging",
+          "heuristic": "TimestampRegularity",
+          "score": 1.0,
+          "poam_risk_level": "CRITICAL",
+          "est_cert_delay_weeks": [
+            6,
+            12
+          ],
+          "fca_exposure": "DISCLOSURE_RISK",
+          "assessor_friction": "Likely outcome: assessor flags 'other than satisfied' on the cited objective(s) and may issue a 'NOT MET' on the parent control. Likely POA&M item with HIGH severity. Conditional certification is at risk; control may not be POA&M-eligible if the implementation is required.",
+          "nist_objectives": [
+            "3.3.1[a]",
+            "3.3.1[b]",
+            "3.3.8[a]"
+          ],
+          "why": "Mathematically uniform timestamps in audit-log evidence are inconsistent with real human or system behavior. NIST 800-171A 3.3.1[a]-[c] (audit events) and 3.3.8[a] (audit log protection) require evidence of actual system activity. Synthetic timestamp distributions support a finding that the audit-log evidence was generated, not collected. This is a NOT MET pattern on 3.3.1 evidence and a strong signal of fabrication if the contractor cannot produce the source-of-truth log file."
+        }
+      ]
+    },
+    "poam_batch_2026Q1": {
+      "artifact_id": "poam_batch_2026Q1",
+      "worst_poam_risk": "CRITICAL",
+      "est_cert_delay_weeks": [
+        8,
+        16
+      ],
+      "worst_fca_exposure": "DISCLOSURE_RISK",
+      "headline": "CRITICAL: estimated 8-16 week cert-date slip; assessor will likely fail one or more cited objectives.",
+      "deltas": [
+        {
+          "artifact_id": "poam_batch_2026Q1",
+          "heuristic": "MappingDensity",
+          "score": 1.0,
+          "poam_risk_level": "MEDIUM",
+          "est_cert_delay_weeks": [
+            1,
+            3
+          ],
+          "fca_exposure": "NONE",
+          "assessor_friction": "Likely outcome: assessor opens a MEDIUM-severity POA&M item and asks for a corrected artifact. Does not block conditional certification on its own but compounds with other findings.",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "why": "Mathematically perfect (1.00) cross-references between an SSP narrative and the NIST 800-171 control catalog are statistically improbable in real implementations. Assessors expect partial inheritance, gaps, and shared responsibility. A 1.00 mapping density is consistent with LLM output that 'fills in every cell' rather than reflecting a real boundary. This downgrades evidence credibility but is not itself a control failure."
+        },
+        {
+          "artifact_id": "poam_batch_2026Q1",
+          "heuristic": "FactualPlausibility",
+          "score": 1.0,
+          "poam_risk_level": "CRITICAL",
+          "est_cert_delay_weeks": [
+            8,
+            16
+          ],
+          "fca_exposure": "DISCLOSURE_RISK",
+          "assessor_friction": "Likely outcome: assessor flags 'other than satisfied' on the cited objective(s) and may issue a 'NOT MET' on the parent control. Likely POA&M item with HIGH severity. Conditional certification is at risk; control may not be POA&M-eligible if the implementation is required.",
+          "nist_objectives": [
+            "3.12.4[a]",
+            "3.12.1[a]"
+          ],
+          "why": "32 CFR 170 (CMMC Final Rule) requires the SSP to accurately describe the system. NIST 800-171A objectives 3.12.4[a]-[d] require the SSP to be consistent with the actual implementation. A factual impossibility in the SSP (e.g., Azure AD enforcing AWS GovCloud access) is treated by experienced assessors as 'other than satisfied' on the relevant control and a likely 'NOT MET' on 3.12.4. DOJ Civil Cyber-Fraud Initiative (launched October 6, 2021) treats knowingly false cybersecurity representations to the government as actionable False Claims Act liability. A factual impossibility in a contractor-signed SSP is the exact pattern DOJ has settled on (Aerojet $9M 2022, Penn State $1.25M 2024, Insight Global $11.25M 2024)."
+        }
+      ]
+    },
+    "ssp_3_1_1_access_control": {
+      "artifact_id": "ssp_3_1_1_access_control",
+      "worst_poam_risk": "CRITICAL",
+      "est_cert_delay_weeks": [
+        8,
+        16
+      ],
+      "worst_fca_exposure": "DISCLOSURE_RISK",
+      "headline": "CRITICAL: estimated 8-16 week cert-date slip; assessor will likely fail one or more cited objectives.",
+      "deltas": [
+        {
+          "artifact_id": "ssp_3_1_1_access_control",
+          "heuristic": "FactualPlausibility",
+          "score": 1.0,
+          "poam_risk_level": "CRITICAL",
+          "est_cert_delay_weeks": [
+            8,
+            16
+          ],
+          "fca_exposure": "DISCLOSURE_RISK",
+          "assessor_friction": "Likely outcome: assessor flags 'other than satisfied' on the cited objective(s) and may issue a 'NOT MET' on the parent control. Likely POA&M item with HIGH severity. Conditional certification is at risk; control may not be POA&M-eligible if the implementation is required.",
+          "nist_objectives": [
+            "3.12.4[a]",
+            "3.12.1[a]"
+          ],
+          "why": "32 CFR 170 (CMMC Final Rule) requires the SSP to accurately describe the system. NIST 800-171A objectives 3.12.4[a]-[d] require the SSP to be consistent with the actual implementation. A factual impossibility in the SSP (e.g., Azure AD enforcing AWS GovCloud access) is treated by experienced assessors as 'other than satisfied' on the relevant control and a likely 'NOT MET' on 3.12.4. DOJ Civil Cyber-Fraud Initiative (launched October 6, 2021) treats knowingly false cybersecurity representations to the government as actionable False Claims Act liability. A factual impossibility in a contractor-signed SSP is the exact pattern DOJ has settled on (Aerojet $9M 2022, Penn State $1.25M 2024, Insight Global $11.25M 2024)."
+        }
+      ]
+    }
+  },
+  "packet_risk": {
+    "artifact_id": "falcon_edge_packet_v1",
+    "worst_poam_risk": "CRITICAL",
+    "est_cert_delay_weeks": [
+      8,
+      16
+    ],
+    "worst_fca_exposure": "DISCLOSURE_RISK",
+    "headline": "CRITICAL: estimated 8-16 week cert-date slip; assessor will likely fail one or more cited objectives.",
+    "deltas": [
+      {
+        "artifact_id": "au_3_3_1_audit_logging",
+        "heuristic": "MappingDensity",
+        "score": 1.0,
+        "poam_risk_level": "MEDIUM",
+        "est_cert_delay_weeks": [
+          1,
+          3
+        ],
+        "fca_exposure": "NONE",
+        "assessor_friction": "Likely outcome: assessor opens a MEDIUM-severity POA&M item and asks for a corrected artifact. Does not block conditional certification on its own but compounds with other findings.",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "why": "Mathematically perfect (1.00) cross-references between an SSP narrative and the NIST 800-171 control catalog are statistically improbable in real implementations. Assessors expect partial inheritance, gaps, and shared responsibility. A 1.00 mapping density is consistent with LLM output that 'fills in every cell' rather than reflecting a real boundary. This downgrades evidence credibility but is not itself a control failure."
+      },
+      {
+        "artifact_id": "au_3_3_1_audit_logging",
+        "heuristic": "TimestampRegularity",
+        "score": 1.0,
+        "poam_risk_level": "CRITICAL",
+        "est_cert_delay_weeks": [
+          6,
+          12
+        ],
+        "fca_exposure": "DISCLOSURE_RISK",
+        "assessor_friction": "Likely outcome: assessor flags 'other than satisfied' on the cited objective(s) and may issue a 'NOT MET' on the parent control. Likely POA&M item with HIGH severity. Conditional certification is at risk; control may not be POA&M-eligible if the implementation is required.",
+        "nist_objectives": [
+          "3.3.1[a]",
+          "3.3.1[b]",
+          "3.3.8[a]"
+        ],
+        "why": "Mathematically uniform timestamps in audit-log evidence are inconsistent with real human or system behavior. NIST 800-171A 3.3.1[a]-[c] (audit events) and 3.3.8[a] (audit log protection) require evidence of actual system activity. Synthetic timestamp distributions support a finding that the audit-log evidence was generated, not collected. This is a NOT MET pattern on 3.3.1 evidence and a strong signal of fabrication if the contractor cannot produce the source-of-truth log file."
+      },
+      {
+        "artifact_id": "poam_batch_2026Q1",
+        "heuristic": "MappingDensity",
+        "score": 1.0,
+        "poam_risk_level": "MEDIUM",
+        "est_cert_delay_weeks": [
+          1,
+          3
+        ],
+        "fca_exposure": "NONE",
+        "assessor_friction": "Likely outcome: assessor opens a MEDIUM-severity POA&M item and asks for a corrected artifact. Does not block conditional certification on its own but compounds with other findings.",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "why": "Mathematically perfect (1.00) cross-references between an SSP narrative and the NIST 800-171 control catalog are statistically improbable in real implementations. Assessors expect partial inheritance, gaps, and shared responsibility. A 1.00 mapping density is consistent with LLM output that 'fills in every cell' rather than reflecting a real boundary. This downgrades evidence credibility but is not itself a control failure."
+      },
+      {
+        "artifact_id": "poam_batch_2026Q1",
+        "heuristic": "FactualPlausibility",
+        "score": 1.0,
+        "poam_risk_level": "CRITICAL",
+        "est_cert_delay_weeks": [
+          8,
+          16
+        ],
+        "fca_exposure": "DISCLOSURE_RISK",
+        "assessor_friction": "Likely outcome: assessor flags 'other than satisfied' on the cited objective(s) and may issue a 'NOT MET' on the parent control. Likely POA&M item with HIGH severity. Conditional certification is at risk; control may not be POA&M-eligible if the implementation is required.",
+        "nist_objectives": [
+          "3.12.4[a]",
+          "3.12.1[a]"
+        ],
+        "why": "32 CFR 170 (CMMC Final Rule) requires the SSP to accurately describe the system. NIST 800-171A objectives 3.12.4[a]-[d] require the SSP to be consistent with the actual implementation. A factual impossibility in the SSP (e.g., Azure AD enforcing AWS GovCloud access) is treated by experienced assessors as 'other than satisfied' on the relevant control and a likely 'NOT MET' on 3.12.4. DOJ Civil Cyber-Fraud Initiative (launched October 6, 2021) treats knowingly false cybersecurity representations to the government as actionable False Claims Act liability. A factual impossibility in a contractor-signed SSP is the exact pattern DOJ has settled on (Aerojet $9M 2022, Penn State $1.25M 2024, Insight Global $11.25M 2024)."
+      },
+      {
+        "artifact_id": "ssp_3_1_1_access_control",
+        "heuristic": "FactualPlausibility",
+        "score": 1.0,
+        "poam_risk_level": "CRITICAL",
+        "est_cert_delay_weeks": [
+          8,
+          16
+        ],
+        "fca_exposure": "DISCLOSURE_RISK",
+        "assessor_friction": "Likely outcome: assessor flags 'other than satisfied' on the cited objective(s) and may issue a 'NOT MET' on the parent control. Likely POA&M item with HIGH severity. Conditional certification is at risk; control may not be POA&M-eligible if the implementation is required.",
+        "nist_objectives": [
+          "3.12.4[a]",
+          "3.12.1[a]"
+        ],
+        "why": "32 CFR 170 (CMMC Final Rule) requires the SSP to accurately describe the system. NIST 800-171A objectives 3.12.4[a]-[d] require the SSP to be consistent with the actual implementation. A factual impossibility in the SSP (e.g., Azure AD enforcing AWS GovCloud access) is treated by experienced assessors as 'other than satisfied' on the relevant control and a likely 'NOT MET' on 3.12.4. DOJ Civil Cyber-Fraud Initiative (launched October 6, 2021) treats knowingly false cybersecurity representations to the government as actionable False Claims Act liability. A factual impossibility in a contractor-signed SSP is the exact pattern DOJ has settled on (Aerojet $9M 2022, Penn State $1.25M 2024, Insight Global $11.25M 2024)."
+      }
+    ]
+  },
+  "rebuttals_per_artifact": {
+    "au_3_3_1_audit_logging": [
+      {
+        "artifact_id": "au_3_3_1_audit_logging",
+        "heuristic": "MappingDensity",
+        "score": 1.0,
+        "rebuttal_steps": [
+          "Review the SSP for control coverage that is too perfect (e.g., every objective marked MET with no inheritance and no POA&M items).",
+          "Identify shared-responsibility controls (cloud service provider controls, MSP-managed controls). These should be marked as inherited, not implemented in-house.",
+          "Identify gaps that should be on the POA&M but are not. Real systems have gaps. A 1.00 mapping density usually means gaps are hidden.",
+          "Re-run the detector after splitting inheritance and adding POA&M items."
+        ],
+        "evidence_to_produce": [
+          "Updated SSP with explicit inheritance markers.",
+          "Updated POA&M with realistic gap items.",
+          "CRM (Customer Responsibility Matrix) from cloud provider."
+        ],
+        "escalation_path": "Counsel escalation NOT typically required. This is a credibility concern, not a falsity claim."
+      },
+      {
+        "artifact_id": "au_3_3_1_audit_logging",
+        "heuristic": "TimestampRegularity",
+        "score": 1.0,
+        "rebuttal_steps": [
+          "Pull the source-of-truth log file (raw .evtx, syslog, JSON event stream) for the time window the detector evaluated.",
+          "Compare event-time distribution in the source log against what the detector saw. If the source log shows realistic variance and the detected artifact was an AI summary or excerpt, supply the source log as the assessor's evidence and DEPRECATE the AI summary.",
+          "If the source log itself is uniform, the audit-log evidence is fabricated or generated. Treat as a CRITICAL finding and escalate.",
+          "Going forward, never submit AI-summarized log evidence to an assessor. Always submit the raw collector export or a SIEM-issued report."
+        ],
+        "evidence_to_produce": [
+          "Raw source log (.evtx, syslog, CloudTrail event stream).",
+          "SIEM-issued report with event-time distribution.",
+          "Log-collector configuration showing the source.",
+          "Hash chain or write-once storage proof for the source log."
+        ],
+        "escalation_path": "ESCALATE TO COUNSEL if the log evidence has been submitted to the government and the source log cannot be produced. Fabricated audit evidence is a high-severity FCA exposure under the Civil Cyber-Fraud Initiative."
+      }
+    ],
+    "poam_batch_2026Q1": [
+      {
+        "artifact_id": "poam_batch_2026Q1",
+        "heuristic": "MappingDensity",
+        "score": 1.0,
+        "rebuttal_steps": [
+          "Review the SSP for control coverage that is too perfect (e.g., every objective marked MET with no inheritance and no POA&M items).",
+          "Identify shared-responsibility controls (cloud service provider controls, MSP-managed controls). These should be marked as inherited, not implemented in-house.",
+          "Identify gaps that should be on the POA&M but are not. Real systems have gaps. A 1.00 mapping density usually means gaps are hidden.",
+          "Re-run the detector after splitting inheritance and adding POA&M items."
+        ],
+        "evidence_to_produce": [
+          "Updated SSP with explicit inheritance markers.",
+          "Updated POA&M with realistic gap items.",
+          "CRM (Customer Responsibility Matrix) from cloud provider."
+        ],
+        "escalation_path": "Counsel escalation NOT typically required. This is a credibility concern, not a falsity claim."
+      },
+      {
+        "artifact_id": "poam_batch_2026Q1",
+        "heuristic": "FactualPlausibility",
+        "score": 1.0,
+        "rebuttal_steps": [
+          "Identify the named author of the SSP section. Confirm they signed off on the technical claim flagged here.",
+          "Pull the actual identity-broker configuration export from the system named in the flagged paragraph (e.g., AWS IAM Identity Center config, Entra Conditional Access JSON, CASB policy export).",
+          "Compare the exported configuration to the SSP text. If the config contradicts the SSP text, REWRITE the SSP. The detector finding is TRUE.",
+          "If the SSP text is correct and the detector caught a wording ambiguity, add a one-sentence clarification with the exact product names and boundary, then re-run the detector."
+        ],
+        "evidence_to_produce": [
+          "Identity-broker config export (JSON or screenshot) for the named system.",
+          "Conditional Access policy list (Entra ID admin center export).",
+          "AWS IAM Identity Center permission set + assignment export.",
+          "Network architecture diagram showing the cross-cloud trust path.",
+          "Named SSP author + technical reviewer attestation."
+        ],
+        "escalation_path": "ESCALATE TO COUNSEL if the SSP has already been signed and submitted to the government with the factual error intact. DOJ Civil Cyber-Fraud Initiative treats knowingly false cyber representations as actionable. Do not 'fix and forget' a submitted artifact without legal guidance."
+      }
+    ],
+    "ssp_3_1_1_access_control": [
+      {
+        "artifact_id": "ssp_3_1_1_access_control",
+        "heuristic": "FactualPlausibility",
+        "score": 1.0,
+        "rebuttal_steps": [
+          "Identify the named author of the SSP section. Confirm they signed off on the technical claim flagged here.",
+          "Pull the actual identity-broker configuration export from the system named in the flagged paragraph (e.g., AWS IAM Identity Center config, Entra Conditional Access JSON, CASB policy export).",
+          "Compare the exported configuration to the SSP text. If the config contradicts the SSP text, REWRITE the SSP. The detector finding is TRUE.",
+          "If the SSP text is correct and the detector caught a wording ambiguity, add a one-sentence clarification with the exact product names and boundary, then re-run the detector."
+        ],
+        "evidence_to_produce": [
+          "Identity-broker config export (JSON or screenshot) for the named system.",
+          "Conditional Access policy list (Entra ID admin center export).",
+          "AWS IAM Identity Center permission set + assignment export.",
+          "Network architecture diagram showing the cross-cloud trust path.",
+          "Named SSP author + technical reviewer attestation."
+        ],
+        "escalation_path": "ESCALATE TO COUNSEL if the SSP has already been signed and submitted to the government with the factual error intact. DOJ Civil Cyber-Fraud Initiative treats knowingly false cyber representations as actionable. Do not 'fix and forget' a submitted artifact without legal guidance."
+      }
+    ]
+  },
+  "input_files": [
+    "au_3_3_1_audit_logging",
+    "poam_batch_2026Q1",
+    "ssp_3_1_1_access_control"
+  ],
+  "timestamp_extracted_artifacts": [
+    "au_3_3_1_audit_logging"
+  ],
+  "engine_version": "v0.3.1 (factual + risk + rebuttal + 2-tier FCA gate)"
+}

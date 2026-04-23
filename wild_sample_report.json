@@ -1,0 +1,866 @@
+{
+  "engine_version": "v0.3.1 (factual + risk + rebuttal + 2-tier FCA gate)",
+  "runner_version": "wild_sample_runner v2 (dual-mode: whole-file + per-control-packet)",
+  "samples_run": [
+    "A_generic_llm_ssp",
+    "B_human_authored_ssp",
+    "C_vendor_template_ssp"
+  ],
+  "sample_descriptions": {
+    "A_generic_llm_ssp": "Generic LLM output (no prompt guidance, no impossibilities)",
+    "B_human_authored_ssp": "Human-authored, NIST-style, specific tools/people/dates",
+    "C_vendor_template_ssp": "Vendor/MSP template (repeated paragraph skeleton)"
+  },
+  "expected_verdict": {
+    "A_generic_llm_ssp": "CONTAMINATED or LIKELY_SYNTHETIC (recall test)",
+    "B_human_authored_ssp": "CLEAN or PARTIALLY_CONTAMINATED (precision test)",
+    "C_vendor_template_ssp": "CONTAMINATED via BoilerplateCluster (cross-narrative test)"
+  },
+  "results": [
+    {
+      "artifact_id": "A_generic_llm_ssp",
+      "narratives_count": 4,
+      "mode_a_whole_file": {
+        "confidence": "CONTAMINATED",
+        "aggregate_score": 0.451,
+        "findings": [
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "A_generic_llm_ssp",
+            "score": 0.451,
+            "evidence": "n=28 sentences; mean=16.6 words; stdev=4.1; CV=0.247 (threshold 0.45); entropy=2.78 (threshold 2.5)",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Sentence-structure distribution within human range."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "A_generic_llm_ssp",
+            "score": 0.0,
+            "evidence": "control_id_mentions=0; mechanism_tokens=1; ratio=0.00 (threshold 2.0)",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Mechanism specificity within expected range."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "A_generic_llm_ssp",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "A_generic_llm_ssp",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=1 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          }
+        ],
+        "risk_headline": "LOW: estimated 0-1 week impact; credibility concerns only, no expected control failures.",
+        "worst_poam_risk": "LOW",
+        "worst_fca_exposure": "NONE",
+        "factual_matches": []
+      },
+      "mode_b_per_control_packet": {
+        "confidence": "CONTAMINATED",
+        "aggregate_score": 0.548,
+        "findings": [
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "control_id_mentions=0; mechanism_tokens=1; ratio=0.00 (threshold 2.0)",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Mechanism specificity within expected range."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=1 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.1",
+            "score": 0.548,
+            "evidence": "Max Jaccard vs another control: 0.593 (peer=3.1.2)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative for 3.1.1 shares 59% of 5-grams with 3.1.2. Rewrite with mechanism-specific details (tool names, config values, responsible role, review cadence)."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.2",
+            "score": 0.548,
+            "evidence": "Max Jaccard vs another control: 0.593 (peer=3.1.1)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative for 3.1.2 shares 59% of 5-grams with 3.1.1. Rewrite with mechanism-specific details (tool names, config values, responsible role, review cadence)."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "Max Jaccard vs another control: 0.201 (peer=3.1.20)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative sufficiently distinct from peers."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "Max Jaccard vs another control: 0.201 (peer=3.1.3)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative sufficiently distinct from peers."
+          }
+        ],
+        "risk_headline": "MEDIUM: estimated 1-3 week cert-date slip; expect MEDIUM POA&M items and assessor remediation requests.",
+        "worst_poam_risk": "MEDIUM",
+        "worst_fca_exposure": "NONE",
+        "per_control_factual": {
+          "3.1.1": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.2": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.3": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.20": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          }
+        }
+      }
+    },
+    {
+      "artifact_id": "B_human_authored_ssp",
+      "narratives_count": 3,
+      "mode_a_whole_file": {
+        "confidence": "CLEAN",
+        "aggregate_score": 0.0,
+        "findings": [
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "B_human_authored_ssp",
+            "score": 0.0,
+            "evidence": "n=25 sentences; mean=20.0 words; stdev=11.7; CV=0.585 (threshold 0.45); entropy=4.45 (threshold 2.5)",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Sentence-structure distribution within human range."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "B_human_authored_ssp",
+            "score": 0.0,
+            "evidence": "control_id_mentions=0; mechanism_tokens=5; ratio=0.00 (threshold 2.0)",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Mechanism specificity within expected range."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "B_human_authored_ssp",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "B_human_authored_ssp",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=5; grounding_tokens=15; ratio=3.00 (floor 0.25)",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Artifact specificity within expected range."
+          }
+        ],
+        "risk_headline": "LOW: estimated 0-0 week impact; credibility concerns only, no expected control failures.",
+        "worst_poam_risk": "LOW",
+        "worst_fca_exposure": "NONE",
+        "factual_matches": []
+      },
+      "mode_b_per_control_packet": {
+        "confidence": "CLEAN",
+        "aggregate_score": 0.0,
+        "findings": [
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "n=10 sentences; mean=17.3 words; stdev=12.5; CV=0.721 (threshold 0.45); entropy=3.12 (threshold 2.5)",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Sentence-structure distribution within human range."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "control_id_mentions=0; mechanism_tokens=3; ratio=0.00 (threshold 2.0)",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Mechanism specificity within expected range."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=3 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "control_id_mentions=0; mechanism_tokens=1; ratio=0.00 (threshold 2.0)",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Mechanism specificity within expected range."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=1 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "n=8 sentences; mean=23.6 words; stdev=11.4; CV=0.483 (threshold 0.45); entropy=3.00 (threshold 2.5)",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Sentence-structure distribution within human range."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "control_id_mentions=0; mechanism_tokens=1; ratio=0.00 (threshold 2.0)",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Mechanism specificity within expected range."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=1 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "Max Jaccard vs another control: 0.007 (peer=3.1.2)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative sufficiently distinct from peers."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "Max Jaccard vs another control: 0.007 (peer=3.1.1)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative sufficiently distinct from peers."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "Max Jaccard vs another control: 0.003 (peer=3.1.2)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative sufficiently distinct from peers."
+          }
+        ],
+        "risk_headline": "LOW: estimated 0-0 week impact; credibility concerns only, no expected control failures.",
+        "worst_poam_risk": "LOW",
+        "worst_fca_exposure": "NONE",
+        "per_control_factual": {
+          "3.1.1": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.2": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.3": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          }
+        }
+      }
+    },
+    {
+      "artifact_id": "C_vendor_template_ssp",
+      "narratives_count": 4,
+      "mode_a_whole_file": {
+        "confidence": "CONTAMINATED",
+        "aggregate_score": 0.643,
+        "findings": [
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "C_vendor_template_ssp",
+            "score": 0.643,
+            "evidence": "n=28 sentences; mean=12.9 words; stdev=2.1; CV=0.161 (threshold 0.45); entropy=1.84 (threshold 2.5)",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Low sentence-length variance is consistent with LLM output. Request narrative author attestation or revision by a named human."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "C_vendor_template_ssp",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "C_vendor_template_ssp",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "C_vendor_template_ssp",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          }
+        ],
+        "risk_headline": "LOW: estimated 0-1 week impact; credibility concerns only, no expected control failures.",
+        "worst_poam_risk": "LOW",
+        "worst_fca_exposure": "NONE",
+        "factual_matches": []
+      },
+      "mode_b_per_control_packet": {
+        "confidence": "LIKELY_SYNTHETIC",
+        "aggregate_score": 1.0,
+        "findings": [
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.1",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.2",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.3",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "SentenceStructureAnomaly",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "Insufficient sentences (7); cannot evaluate.",
+            "nist_objectives": [
+              "3.12.1[a]",
+              "3.12.3[a]"
+            ],
+            "recommendation": "Artifact too short for structural analysis."
+          },
+          {
+            "heuristic": "MappingDensity",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "No control refs or mechanism tokens; cannot evaluate.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]"
+            ],
+            "recommendation": "Artifact may be a summary; apply to narrative sections."
+          },
+          {
+            "heuristic": "PromptLeakage",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "No LLM-residue phrases detected.",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Clean."
+          },
+          {
+            "heuristic": "ArtifactSpecificityIndex",
+            "artifact_id": "3.1.20",
+            "score": 0.0,
+            "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+            "nist_objectives": [
+              "3.12.4[b]",
+              "3.12.4[c]",
+              "3.3.1[a]"
+            ],
+            "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.1",
+            "score": 1.0,
+            "evidence": "Max Jaccard vs another control: 1.000 (peer=3.1.2)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative for 3.1.1 shares 100% of 5-grams with 3.1.2. Rewrite with mechanism-specific details (tool names, config values, responsible role, review cadence)."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.2",
+            "score": 1.0,
+            "evidence": "Max Jaccard vs another control: 1.000 (peer=3.1.1)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative for 3.1.2 shares 100% of 5-grams with 3.1.1. Rewrite with mechanism-specific details (tool names, config values, responsible role, review cadence)."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.3",
+            "score": 1.0,
+            "evidence": "Max Jaccard vs another control: 1.000 (peer=3.1.1)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative for 3.1.3 shares 100% of 5-grams with 3.1.1. Rewrite with mechanism-specific details (tool names, config values, responsible role, review cadence)."
+          },
+          {
+            "heuristic": "BoilerplateCluster",
+            "artifact_id": "3.1.20",
+            "score": 1.0,
+            "evidence": "Max Jaccard vs another control: 1.000 (peer=3.1.1)",
+            "nist_objectives": [
+              "3.12.4[a]"
+            ],
+            "recommendation": "Narrative for 3.1.20 shares 100% of 5-grams with 3.1.1. Rewrite with mechanism-specific details (tool names, config values, responsible role, review cadence)."
+          }
+        ],
+        "risk_headline": "MEDIUM: estimated 2-4 week cert-date slip; expect MEDIUM POA&M items and assessor remediation requests.",
+        "worst_poam_risk": "MEDIUM",
+        "worst_fca_exposure": "NONE",
+        "per_control_factual": {
+          "3.1.1": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.2": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.3": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          },
+          "3.1.20": {
+            "score": 0.0,
+            "evidence": "No tech-stack impossibilities detected against curated allowlist."
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,558 @@
+"""
+Build the 3-page Falcon Edge AI Evidence Integrity Report (v0.3).
+
+War-panel Round 1 (April 22, 2026) added three new layers to the report:
+    Page 1 - Cover + Verdict + Risk Headline + Executive Summary
+    Page 2 - Per-Finding Detail (existing 7 heuristics + factual)
+    Page 3 - Risk Delta + Defensive Rebuttal Kit
+
+Reads richer JSON from falcon_edge_report_v2.json
+Writes PDF to mnt/Claude/Falcon_Edge_AI_Evidence_Integrity_Report_v2.pdf
+"""
+from __future__ import annotations
+
+import json
+from datetime import datetime
+from pathlib import Path
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import LETTER
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import (
+    Paragraph, Spacer, Table, TableStyle, PageBreak, SimpleDocTemplate, KeepTogether,
+)
+
+REPORT_JSON = Path("/sessions/compassionate-vibrant-hypatia/falcon_edge_report_v2.json")
+OUT_PDF = Path("/sessions/compassionate-vibrant-hypatia/mnt/Claude/Falcon_Edge_AI_Evidence_Integrity_Report_v2.pdf")
+
+# Brand palette
+HARDSEAL_BLUE = colors.HexColor("#0B2545")
+HARDSEAL_ACCENT = colors.HexColor("#1E6091")
+RISK_RED = colors.HexColor("#B22222")
+RISK_AMBER = colors.HexColor("#D2691E")
+RISK_GREEN = colors.HexColor("#2E7D32")
+SUBTLE = colors.HexColor("#5A6675")
+RULE_GREY = colors.HexColor("#C9D1D9")
+PANEL_BG = colors.HexColor("#F4F6F8")
+
+
+def confidence_color(c: str) -> colors.Color:
+    if c in ("LIKELY_SYNTHETIC", "CONTAMINATED"):
+        return RISK_RED
+    if c == "PARTIALLY_CONTAMINATED":
+        return RISK_AMBER
+    return RISK_GREEN
+
+
+def confidence_label(c: str) -> str:
+    return {
+        "LIKELY_SYNTHETIC": "LIKELY SYNTHETIC",
+        "CONTAMINATED": "CONTAMINATED",
+        "PARTIALLY_CONTAMINATED": "PARTIALLY CONTAMINATED",
+        "CLEAN": "CLEAN",
+    }.get(c, c)
+
+
+def poam_color(level: str) -> colors.Color:
+    return {
+        "CRITICAL": RISK_RED,
+        "HIGH": RISK_RED,
+        "MEDIUM": RISK_AMBER,
+        "LOW": RISK_GREEN,
+    }.get(level, SUBTLE)
+
+
+def fca_color(exposure: str) -> colors.Color:
+    return {
+        "KNOWING_FALSITY_RISK": RISK_RED,
+        "DISCLOSURE_RISK": RISK_AMBER,
+        "NONE": RISK_GREEN,
+    }.get(exposure, SUBTLE)
+
+
+HEURISTIC_PLAIN = {
+    "MappingDensity":
+        "Citation-density anomaly. Narrative cites many NIST control IDs "
+        "but names few real mechanisms. Pattern of LLM padding.",
+    "TimestampRegularity":
+        "Synthetic-clock pattern. Audit timestamps sit on round seconds at "
+        "fixed intervals. Real telemetry is Poisson-distributed.",
+    "BoilerplateCluster":
+        "Cross-narrative shingling. Same template paragraph reused across "
+        "controls that should describe distinct mechanisms.",
+    "PromptLeakage":
+        "LLM residue. Phrases like 'As an AI language model' or "
+        "'[INSERT X HERE]' surfaced in a final-form artifact.",
+    "SentenceStructureAnomaly":
+        "Flatness signal. Sentence-length variance below human-prose floor.",
+    "ArtifactSpecificityIndex":
+        "Grounding ratio. Tools named without versions, tenants, hashes, "
+        "or owner names. Reads written, not lived.",
+    "CitationGraph":
+        "Document graph anomaly. Orphaned references or shallow citation "
+        "depth indicate synthesized cross-references.",
+    "FactualPlausibility":
+        "Content-level factual impossibility. Names a tech-stack pairing "
+        "vendor docs say cannot work as described. v0.3 layer.",
+}
+
+CONTROL_TO_FAMILY = {
+    "ssp_3_1_1_access_control": ("AC.L2-3.1.1", "Access Control"),
+    "au_3_3_1_audit_logging": ("AU.L2-3.3.1", "Audit & Accountability"),
+    "poam_batch_2026Q1": ("POA&M (multi-family)", "Cross-cutting"),
+}
+
+
+def business_impact(heuristic: str, artifact_id: str) -> str:
+    family = CONTROL_TO_FAMILY.get(artifact_id, ("--", "--"))[0]
+    if heuristic == "MappingDensity":
+        return (
+            f"A C3PAO assessor reading {family} will see citation padding and "
+            "challenge whether the named mechanisms are actually deployed. "
+            "Likely outcome: NOT MET on this objective and an interview escalation."
+        )
+    if heuristic == "TimestampRegularity":
+        return (
+            "A C3PAO will request the raw SIEM export. The uniform 5-minute "
+            "cadence cannot exist in production telemetry. Audit logging "
+            "evidence will be rejected and the assessor will pivot to integrity "
+            "concerns across the entire AU family."
+        )
+    if heuristic == "BoilerplateCluster":
+        return (
+            "Identical implementation language across distinct controls invites "
+            "the assessor to treat the entire SSP as templated rather than "
+            "operational. Multi-control rejection risk."
+        )
+    if heuristic == "PromptLeakage":
+        return (
+            "Direct evidence the artifact was generated by an LLM and submitted "
+            "without human review. C3PAO will treat the entire packet as "
+            "untrusted. False Claims Act exposure if submitted in a contractual "
+            "compliance attestation."
+        )
+    if heuristic == "ArtifactSpecificityIndex":
+        return (
+            "Without versions, tenants, owners, and hashes, the artifact cannot "
+            "be re-verified. Assessor will require live system walkthrough, a "
+            "longer, more expensive engagement with higher fail risk."
+        )
+    if heuristic == "SentenceStructureAnomaly":
+        return (
+            "Stylistic AI fingerprint. By itself a soft signal, but combined "
+            "with other findings supports a finding of non-attestable narrative."
+        )
+    if heuristic == "FactualPlausibility":
+        return (
+            "Content-level factual error. NIST 800-171A 3.12.4[a] requires the "
+            "SSP to accurately describe implementation. A vendor-impossible "
+            "claim is the cleanest 'NOT MET' a C3PAO can write and a clean DOJ "
+            "Civil Cyber-Fraud Initiative predicate if signed and submitted."
+        )
+    return (
+        "Assessor will flag the artifact for additional verification. "
+        "Engagement cost and timeline increase."
+    )
+
+
+def main() -> int:
+    data = json.loads(REPORT_JSON.read_text())
+    packet = data["packet"]
+    per_artifact = data["per_artifact"]
+    factual_matches = data.get("factual_matches", {})
+    risk_per_artifact = data.get("risk_per_artifact", {})
+    packet_risk = data.get("packet_risk", {})
+    rebuttals = data.get("rebuttals_per_artifact", {})
+
+    OUT_PDF.parent.mkdir(parents=True, exist_ok=True)
+    doc = SimpleDocTemplate(
+        str(OUT_PDF),
+        pagesize=LETTER,
+        leftMargin=0.7 * inch,
+        rightMargin=0.7 * inch,
+        topMargin=0.5 * inch,
+        bottomMargin=0.5 * inch,
+        title="Falcon Edge Systems - AI Evidence Integrity Report v0.3",
+        author="Hardseal",
+    )
+
+    base = getSampleStyleSheet()
+    s_brand = ParagraphStyle("Brand", parent=base["Normal"], fontName="Helvetica-Bold",
+                             fontSize=10, textColor=HARDSEAL_ACCENT, spaceAfter=2)
+    s_title = ParagraphStyle("Title", parent=base["Title"], fontSize=22, leading=26,
+                             textColor=HARDSEAL_BLUE, spaceAfter=4, alignment=0)
+    s_subtitle = ParagraphStyle("Subtitle", parent=base["Normal"], fontSize=11, leading=14,
+                                textColor=SUBTLE, spaceAfter=14)
+    s_h2 = ParagraphStyle("H2", parent=base["Heading2"], fontSize=12, leading=15,
+                          textColor=HARDSEAL_BLUE, spaceBefore=8, spaceAfter=4)
+    s_body = ParagraphStyle("Body", parent=base["Normal"], fontSize=10, leading=13.5,
+                            spaceAfter=6)
+    s_small = ParagraphStyle("Small", parent=base["Normal"], fontSize=8, leading=10.5,
+                             textColor=SUBTLE)
+    s_table_h = ParagraphStyle("TableHead", parent=base["Normal"], fontSize=8.5,
+                               leading=10, textColor=colors.white, fontName="Helvetica-Bold")
+    s_table_cell = ParagraphStyle("TableCell", parent=base["Normal"], fontSize=8.5, leading=11)
+    s_verdict_label = ParagraphStyle("VL", parent=base["Normal"], fontSize=9, leading=11,
+                                     textColor=colors.white, fontName="Helvetica-Bold")
+    s_verdict_value = ParagraphStyle("VV", parent=base["Normal"], fontSize=18, leading=22,
+                                     textColor=colors.white, fontName="Helvetica-Bold")
+
+    story = []
+    today = datetime.now().strftime("%B %d, %Y")
+
+    # ---------------- PAGE 1 ----------------
+    story.append(Paragraph("HARDSEAL  /  AI EVIDENCE INTEGRITY REPORT  v0.3", s_brand))
+    story.append(Paragraph("Falcon Edge Systems", s_title))
+    story.append(Paragraph(
+        f"CMMC Level 2 Readiness Pack. Q1 2026 sample. Prepared {today}.",
+        s_subtitle,
+    ))
+
+    verdict_color = confidence_color(packet["confidence"])
+    verdict_label = confidence_label(packet["confidence"])
+    score_pct = int(round(packet["aggregate_score"] * 100))
+    artifact_count = len(per_artifact)
+    flagged = sum(
+        1 for r in per_artifact.values()
+        if r["confidence"] in ("CONTAMINATED", "LIKELY_SYNTHETIC")
+    )
+
+    verdict_tbl = Table(
+        [[
+            Paragraph("OVERALL VERDICT", s_verdict_label),
+            Paragraph("AGGREGATE SCORE", s_verdict_label),
+            Paragraph("ARTIFACTS FLAGGED", s_verdict_label),
+        ], [
+            Paragraph(verdict_label, s_verdict_value),
+            Paragraph(f"{packet['aggregate_score']:.2f} / 1.00 &nbsp; ({score_pct}%)",
+                      s_verdict_value),
+            Paragraph(f"{flagged} of {artifact_count}", s_verdict_value),
+        ]],
+        colWidths=[2.4 * inch, 2.4 * inch, 2.3 * inch],
+        rowHeights=[0.25 * inch, 0.55 * inch],
+    )
+    verdict_tbl.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, -1), verdict_color),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 10),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+    ]))
+    story.append(verdict_tbl)
+    story.append(Spacer(1, 10))
+
+    # NEW: Risk Headline panel (the war-panel gap closure)
+    rk = packet_risk
+    if rk:
+        weeks = rk.get("est_cert_delay_weeks", [0, 0])
+        risk_panel = Table(
+            [[
+                Paragraph("WORST POA&amp;M RISK", s_verdict_label),
+                Paragraph("EST. CERT-DATE SLIP", s_verdict_label),
+                Paragraph("FCA EXPOSURE BAND", s_verdict_label),
+            ], [
+                Paragraph(rk.get("worst_poam_risk", "LOW"), s_verdict_value),
+                Paragraph(f"{weeks[0]}-{weeks[1]} weeks", s_verdict_value),
+                Paragraph(rk.get("worst_fca_exposure", "NONE").replace("_", " "),
+                          s_verdict_value),
+            ]],
+            colWidths=[2.4 * inch, 2.4 * inch, 2.3 * inch],
+            rowHeights=[0.25 * inch, 0.55 * inch],
+        )
+        risk_panel.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, -1), HARDSEAL_BLUE),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 10),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+            ("TOPPADDING", (0, 0), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+        ]))
+        story.append(risk_panel)
+        story.append(Spacer(1, 6))
+        story.append(Paragraph(
+            f"<b>Headline:</b> {rk.get('headline', '')}",
+            ParagraphStyle("HL", parent=s_body, backColor=PANEL_BG,
+                           leftIndent=8, rightIndent=8, spaceBefore=4, spaceAfter=10,
+                           borderPadding=6),
+        ))
+
+    # Executive Summary
+    story.append(Paragraph("Executive Summary", s_h2))
+    story.append(Paragraph(
+        "Hardseal&rsquo;s AI Provenance Detector v0.3 analyzed three artifacts from "
+        "the Falcon Edge Systems CMMC Level 2 readiness packet: a System Security "
+        "Plan narrative for AC.L2-3.1.1, an audit logging narrative for "
+        "AU.L2-3.3.1, and a four-entry POA&amp;M batch covering IA, SC, SI, and "
+        "AT families. All three artifacts triggered hard contamination signals. "
+        "The packet aggregate classifies as <b>LIKELY SYNTHETIC</b> at score "
+        f"{packet['aggregate_score']:.2f}.",
+        s_body,
+    ))
+    story.append(Paragraph(
+        "v0.3 adds three new layers above the seven fingerprint heuristics: a "
+        "<b>factual-plausibility</b> check that catches vendor-impossible "
+        "tech-stack claims (e.g., Azure AD Conditional Access enforcing AWS "
+        "GovCloud access), a <b>risk-delta translator</b> that maps each finding "
+        "to a likely POA&amp;M risk, cert-date slip window, and DOJ Civil "
+        "Cyber-Fraud Initiative exposure band, and a <b>defensive rebuttal kit</b> "
+        "that gives the contractor concrete steps to refute any false positive.",
+        s_body,
+    ))
+    story.append(Paragraph(
+        "v0.3 closes the gap a war-panel pressure test (April 22, 2026) "
+        "identified in v0.2: the engine scored a Falcon Edge SSP narrative as "
+        "CLEAN despite an Azure-AD-on-AWS-GovCloud factual hallucination that "
+        "any C3PAO would rip apart. v0.3 catches it.",
+        s_body,
+    ))
+
+    story.append(Paragraph("False Claims Act Exposure", s_h2))
+    story.append(Paragraph(
+        "DOJ Civil Cyber-Fraud Initiative settlements exceeded "
+        "<b>$52M across nine cybersecurity-related FCA cases</b> in FY2025, "
+        "driven largely by misstatements in SSPs and POA&amp;Ms submitted under "
+        "DFARS 252.204-7012 and 7019/7020. Effective <b>November 10, 2026</b>, "
+        "DFARS 252.204-7021 makes a CMMC Level 2 self-assessment or C3PAO "
+        "assessment a condition of contract award. Submitting AI-fabricated "
+        "implementation language under an officer attestation is the "
+        "highest-velocity FCA exposure path Falcon Edge currently carries.",
+        s_body,
+    ))
+
+    story.append(Paragraph(
+        "Methodology: Hardseal AIProvenanceDetector v0.3. Eight stdlib-only "
+        "heuristics, plus a risk-delta translator and rebuttal kit. "
+        "Deterministic, auditable, zero external dependencies.",
+        s_small,
+    ))
+    story.append(PageBreak())
+
+    # ---------------- PAGE 2 - PER-FINDING DETAIL ----------------
+    story.append(Paragraph("HARDSEAL  /  PER-FINDING DETAIL", s_brand))
+    story.append(Paragraph("Finding Fingerprints", s_title))
+    story.append(Paragraph(
+        "Heuristic-by-heuristic detail for every signal at score 0.50 or above. "
+        "Per-finding business impact mapped to the affected control family.",
+        s_subtitle,
+    ))
+
+    rows = [[
+        Paragraph("HEURISTIC / WHAT IT DETECTS", s_table_h),
+        Paragraph("ARTIFACT &amp; CONTROL", s_table_h),
+        Paragraph("SCORE", s_table_h),
+        Paragraph("EVIDENCE / BUSINESS IMPACT", s_table_h),
+    ]]
+
+    seen_signatures = set()
+    flagged_findings = []
+    for aid, rep in per_artifact.items():
+        for f in rep["findings"]:
+            if f["score"] >= 0.5:
+                sig = (f["heuristic"], aid, round(f["score"], 2))
+                if sig in seen_signatures:
+                    continue
+                seen_signatures.add(sig)
+                flagged_findings.append((aid, f))
+    flagged_findings.sort(key=lambda x: (-x[1]["score"], x[0]))
+
+    for aid, f in flagged_findings:
+        family_id, family_name = CONTROL_TO_FAMILY.get(aid, (aid, "--"))
+        plain = HEURISTIC_PLAIN.get(f["heuristic"], "")
+        impact = business_impact(f["heuristic"], aid)
+        evidence_short = f["evidence"][:240]
+
+        rows.append([
+            Paragraph(
+                f"<b>{f['heuristic']}</b><br/>"
+                f"<font size=8 color='#5A6675'>{plain}</font>",
+                s_table_cell,
+            ),
+            Paragraph(
+                f"<b>{family_id}</b><br/>"
+                f"<font size=8 color='#5A6675'>{family_name}<br/>{aid}</font>",
+                s_table_cell,
+            ),
+            Paragraph(
+                f"<font color='{RISK_RED.hexval()[0:7]}'><b>{f['score']:.2f}</b></font>",
+                s_table_cell,
+            ),
+            Paragraph(
+                f"<font size=7.5 color='#5A6675'>EVIDENCE: {evidence_short}</font><br/>"
+                f"<br/><b>IMPACT:</b> {impact}",
+                s_table_cell,
+            ),
+        ])
+
+    finding_tbl = Table(
+        rows,
+        colWidths=[1.7 * inch, 1.3 * inch, 0.5 * inch, 3.6 * inch],
+        repeatRows=1,
+    )
+    finding_tbl.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), HARDSEAL_BLUE),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("ALIGN", (2, 1), (2, -1), "CENTER"),
+        ("LINEBELOW", (0, 0), (-1, -1), 0.5, RULE_GREY),
+        ("LEFTPADDING", (0, 0), (-1, -1), 6),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.whitesmoke, colors.white]),
+    ]))
+    story.append(finding_tbl)
+
+    # Factual matches detail block
+    if factual_matches:
+        story.append(Spacer(1, 10))
+        story.append(Paragraph("Factual Plausibility - Matched Impossibilities", s_h2))
+        story.append(Paragraph(
+            "v0.3 layer. Each entry is a vendor-documented impossibility "
+            "extracted from the artifact text, with the public verification "
+            "step a contractor or assessor can run.",
+            s_body,
+        ))
+        for aid, matches in factual_matches.items():
+            if not matches:
+                continue
+            family_id = CONTROL_TO_FAMILY.get(aid, (aid, "--"))[0]
+            for m in matches:
+                story.append(Paragraph(
+                    f"<b>{m.get('label', '')}</b> "
+                    f"<font color='#5A6675' size=8>({family_id} / {aid})</font>",
+                    ParagraphStyle("FactLabel", parent=s_body,
+                                   leftIndent=6, spaceBefore=4, spaceAfter=2),
+                ))
+                story.append(Paragraph(
+                    f"<b>Why it cannot work:</b> {m.get('why', '')}",
+                    ParagraphStyle("FactWhy", parent=s_body, leftIndent=14,
+                                   spaceAfter=2),
+                ))
+                story.append(Paragraph(
+                    f"<b>Verify:</b> {m.get('verify', '')}",
+                    ParagraphStyle("FactVerify", parent=s_body, leftIndent=14,
+                                   spaceAfter=8),
+                ))
+
+    story.append(PageBreak())
+
+    # ---------------- PAGE 3 - RISK DELTA + REBUTTAL ----------------
+    story.append(Paragraph("HARDSEAL  /  RISK DELTA &amp; REBUTTAL KIT", s_brand))
+    story.append(Paragraph("From Score to Outcome", s_title))
+    story.append(Paragraph(
+        "v0.3 layers translate every finding into the assessment outcome a "
+        "C3PAO is likely to write, and the concrete defense the contractor "
+        "can mount if the finding is a false positive.",
+        s_subtitle,
+    ))
+
+    # Per-artifact risk rollup table
+    story.append(Paragraph("Per-Artifact Risk Rollup", s_h2))
+    risk_rows = [[
+        Paragraph("ARTIFACT &amp; CONTROL", s_table_h),
+        Paragraph("WORST POA&amp;M RISK", s_table_h),
+        Paragraph("CERT-DATE SLIP", s_table_h),
+        Paragraph("FCA EXPOSURE", s_table_h),
+        Paragraph("HEADLINE", s_table_h),
+    ]]
+    for aid, rk in risk_per_artifact.items():
+        family_id = CONTROL_TO_FAMILY.get(aid, (aid, "--"))[0]
+        weeks = rk.get("est_cert_delay_weeks", [0, 0])
+        poam = rk.get("worst_poam_risk", "LOW")
+        fca = rk.get("worst_fca_exposure", "NONE")
+        risk_rows.append([
+            Paragraph(f"<b>{family_id}</b><br/>"
+                      f"<font size=8 color='#5A6675'>{aid}</font>", s_table_cell),
+            Paragraph(f"<font color='{poam_color(poam).hexval()[0:7]}'><b>{poam}</b></font>",
+                      s_table_cell),
+            Paragraph(f"{weeks[0]}-{weeks[1]} weeks", s_table_cell),
+            Paragraph(f"<font color='{fca_color(fca).hexval()[0:7]}'><b>"
+                      f"{fca.replace('_', ' ')}</b></font>", s_table_cell),
+            Paragraph(f"<font size=8>{rk.get('headline', '')}</font>", s_table_cell),
+        ])
+    rk_tbl = Table(
+        risk_rows,
+        colWidths=[1.4 * inch, 1.0 * inch, 0.9 * inch, 1.3 * inch, 2.5 * inch],
+        repeatRows=1,
+    )
+    rk_tbl.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), HARDSEAL_BLUE),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("ALIGN", (1, 1), (3, -1), "CENTER"),
+        ("LINEBELOW", (0, 0), (-1, -1), 0.5, RULE_GREY),
+        ("LEFTPADDING", (0, 0), (-1, -1), 6),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+        ("TOPPADDING", (0, 0), (-1, -1), 6),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.whitesmoke, colors.white]),
+    ]))
+    story.append(rk_tbl)
+
+    # Rebuttal kit (compact)
+    story.append(Spacer(1, 12))
+    story.append(Paragraph("Defensive Rebuttal Kit", s_h2))
+    story.append(Paragraph(
+        "For every flagged finding, the contractor can either prove a false "
+        "positive or remediate fast. Each entry below names the steps and the "
+        "evidence to produce. Counsel-escalation guidance is included when DOJ "
+        "Civil Cyber-Fraud Initiative exposure is in play.",
+        s_body,
+    ))
+
+    # Flatten rebuttals across artifacts, dedupe by heuristic.
+    seen_heuristics = set()
+    flat_rebuttals = []
+    for aid, rb_list in rebuttals.items():
+        for rb in rb_list:
+            key = rb["heuristic"]
+            if key in seen_heuristics:
+                continue
+            seen_heuristics.add(key)
+            flat_rebuttals.append((aid, rb))
+
+    for aid, rb in flat_rebuttals:
+        family_id = CONTROL_TO_FAMILY.get(aid, (aid, "--"))[0]
+        steps_html = "".join(
+            f"<br/>&nbsp;&nbsp;{i+1}. {s}" for i, s in enumerate(rb["rebuttal_steps"])
+        )
+        evidence_html = "".join(f"<br/>&nbsp;&nbsp;&bull; {e}"
+                                for e in rb["evidence_to_produce"])
+        story.append(Paragraph(
+            f"<b>{rb['heuristic']}</b> "
+            f"<font color='#5A6675' size=8>(seen on {family_id} / score "
+            f"{rb['score']:.2f})</font>",
+            ParagraphStyle("RBTitle", parent=s_body, spaceBefore=6, spaceAfter=2),
+        ))
+        story.append(Paragraph(
+            f"<b>Steps:</b>{steps_html}",
+            ParagraphStyle("RBSteps", parent=s_body, fontSize=9, leading=12,
+                           leftIndent=8, spaceAfter=2),
+        ))
+        story.append(Paragraph(
+            f"<b>Evidence to produce:</b>{evidence_html}",
+            ParagraphStyle("RBEvi", parent=s_body, fontSize=9, leading=12,
+                           leftIndent=8, spaceAfter=2),
+        ))
+        story.append(Paragraph(
+            f"<b>Escalation:</b> <font size=9>{rb['escalation_path']}</font>",
+            ParagraphStyle("RBEsc", parent=s_body, fontSize=9, leading=12,
+                           leftIndent=8, spaceAfter=8),
+        ))
+
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(
+        "Hardseal &middot; Trust infrastructure for AI-era defense compliance "
+        "&middot; rico@hardseal.ai &middot; hardseal.ai",
+        s_small,
+    ))
+
+    doc.build(story)
+    print(f"PDF written: {OUT_PDF}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

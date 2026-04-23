@@ -1,0 +1,358 @@
+{
+  "packet": {
+    "artifact_id": "PACKET",
+    "confidence": "LIKELY_SYNTHETIC",
+    "aggregate_score": 0.814,
+    "findings": [
+      {
+        "heuristic": "SentenceStructureAnomaly",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "n=11 sentences; mean=29.5 words; stdev=36.0; CV=1.221 (threshold 0.45); entropy=2.85 (threshold 2.5)",
+        "nist_objectives": [
+          "3.12.1[a]",
+          "3.12.3[a]"
+        ],
+        "recommendation": "Sentence-structure distribution within human range."
+      },
+      {
+        "heuristic": "MappingDensity",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 1.0,
+        "evidence": "control_id_mentions=17; mechanism_tokens=0; ratio=17.00 (threshold 2.0)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+      },
+      {
+        "heuristic": "PromptLeakage",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "No LLM-residue phrases detected.",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Clean."
+      },
+      {
+        "heuristic": "ArtifactSpecificityIndex",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]",
+          "3.3.1[a]"
+        ],
+        "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+      },
+      {
+        "heuristic": "SentenceStructureAnomaly",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.07,
+        "evidence": "n=21 sentences; mean=20.3 words; stdev=8.5; CV=0.418 (threshold 0.45); entropy=3.17 (threshold 2.5)",
+        "nist_objectives": [
+          "3.12.1[a]",
+          "3.12.3[a]"
+        ],
+        "recommendation": "Sentence-structure distribution within human range."
+      },
+      {
+        "heuristic": "MappingDensity",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 1.0,
+        "evidence": "control_id_mentions=18; mechanism_tokens=4; ratio=4.50 (threshold 2.0)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+      },
+      {
+        "heuristic": "PromptLeakage",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.0,
+        "evidence": "No LLM-residue phrases detected.",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Clean."
+      },
+      {
+        "heuristic": "ArtifactSpecificityIndex",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.0,
+        "evidence": "mechanism_tokens=4; grounding_tokens=26; ratio=6.50 (floor 0.25)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]",
+          "3.3.1[a]"
+        ],
+        "recommendation": "Artifact specificity within expected range."
+      },
+      {
+        "heuristic": "SentenceStructureAnomaly",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "n=22 sentences; mean=12.9 words; stdev=9.5; CV=0.739 (threshold 0.45); entropy=3.66 (threshold 2.5)",
+        "nist_objectives": [
+          "3.12.1[a]",
+          "3.12.3[a]"
+        ],
+        "recommendation": "Sentence-structure distribution within human range."
+      },
+      {
+        "heuristic": "MappingDensity",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "control_id_mentions=11; mechanism_tokens=11; ratio=1.00 (threshold 2.0)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]"
+        ],
+        "recommendation": "Mechanism specificity within expected range."
+      },
+      {
+        "heuristic": "PromptLeakage",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "No LLM-residue phrases detected.",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Clean."
+      },
+      {
+        "heuristic": "ArtifactSpecificityIndex",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "mechanism_tokens=11; grounding_tokens=12; ratio=1.09 (floor 0.25)",
+        "nist_objectives": [
+          "3.12.4[b]",
+          "3.12.4[c]",
+          "3.3.1[a]"
+        ],
+        "recommendation": "Artifact specificity within expected range."
+      },
+      {
+        "heuristic": "BoilerplateCluster",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 0.0,
+        "evidence": "Max Jaccard vs another control: 0.084 (peer=poam_batch_2026Q1)",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Narrative sufficiently distinct from peers."
+      },
+      {
+        "heuristic": "BoilerplateCluster",
+        "artifact_id": "poam_batch_2026Q1",
+        "score": 0.0,
+        "evidence": "Max Jaccard vs another control: 0.084 (peer=au_3_3_1_audit_logging)",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Narrative sufficiently distinct from peers."
+      },
+      {
+        "heuristic": "BoilerplateCluster",
+        "artifact_id": "ssp_3_1_1_access_control",
+        "score": 0.0,
+        "evidence": "Max Jaccard vs another control: 0.073 (peer=au_3_3_1_audit_logging)",
+        "nist_objectives": [
+          "3.12.4[a]"
+        ],
+        "recommendation": "Narrative sufficiently distinct from peers."
+      },
+      {
+        "heuristic": "TimestampRegularity",
+        "artifact_id": "au_3_3_1_audit_logging",
+        "score": 1.0,
+        "evidence": "n=11 intervals; mean=300.00s; variance=0.00; VMR=0.000; round-second fraction=1.00",
+        "nist_objectives": [
+          "3.3.1[a]",
+          "3.3.1[b]",
+          "3.3.8[a]"
+        ],
+        "recommendation": "Log timing is too regular for a real event stream. Request raw source log (syslog, CloudTrail, Azure Monitor) with microsecond fidelity."
+      }
+    ]
+  },
+  "per_artifact": {
+    "au_3_3_1_audit_logging": {
+      "artifact_id": "au_3_3_1_audit_logging",
+      "confidence": "LIKELY_SYNTHETIC",
+      "aggregate_score": 1.0,
+      "findings": [
+        {
+          "heuristic": "SentenceStructureAnomaly",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 0.0,
+          "evidence": "n=11 sentences; mean=29.5 words; stdev=36.0; CV=1.221 (threshold 0.45); entropy=2.85 (threshold 2.5)",
+          "nist_objectives": [
+            "3.12.1[a]",
+            "3.12.3[a]"
+          ],
+          "recommendation": "Sentence-structure distribution within human range."
+        },
+        {
+          "heuristic": "MappingDensity",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 1.0,
+          "evidence": "control_id_mentions=17; mechanism_tokens=0; ratio=17.00 (threshold 2.0)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+        },
+        {
+          "heuristic": "PromptLeakage",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 0.0,
+          "evidence": "No LLM-residue phrases detected.",
+          "nist_objectives": [
+            "3.12.4[a]"
+          ],
+          "recommendation": "Clean."
+        },
+        {
+          "heuristic": "ArtifactSpecificityIndex",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 0.0,
+          "evidence": "mechanism_tokens=0 (<4); insufficient signal for grounding analysis.",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]",
+            "3.3.1[a]"
+          ],
+          "recommendation": "Narrative too short or mechanism-sparse for this heuristic."
+        },
+        {
+          "heuristic": "TimestampRegularity",
+          "artifact_id": "au_3_3_1_audit_logging",
+          "score": 1.0,
+          "evidence": "n=11 intervals; mean=300.00s; variance=0.00; VMR=0.000; round-second fraction=1.00",
+          "nist_objectives": [
+            "3.3.1[a]",
+            "3.3.1[b]",
+            "3.3.8[a]"
+          ],
+          "recommendation": "Log timing is too regular for a real event stream. Request raw source log (syslog, CloudTrail, Azure Monitor) with microsecond fidelity."
+        }
+      ]
+    },
+    "poam_batch_2026Q1": {
+      "artifact_id": "poam_batch_2026Q1",
+      "confidence": "CONTAMINATED",
+      "aggregate_score": 0.628,
+      "findings": [
+        {
+          "heuristic": "SentenceStructureAnomaly",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 0.07,
+          "evidence": "n=21 sentences; mean=20.3 words; stdev=8.5; CV=0.418 (threshold 0.45); entropy=3.17 (threshold 2.5)",
+          "nist_objectives": [
+            "3.12.1[a]",
+            "3.12.3[a]"
+          ],
+          "recommendation": "Sentence-structure distribution within human range."
+        },
+        {
+          "heuristic": "MappingDensity",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 1.0,
+          "evidence": "control_id_mentions=18; mechanism_tokens=4; ratio=4.50 (threshold 2.0)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "recommendation": "High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role."
+        },
+        {
+          "heuristic": "PromptLeakage",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 0.0,
+          "evidence": "No LLM-residue phrases detected.",
+          "nist_objectives": [
+            "3.12.4[a]"
+          ],
+          "recommendation": "Clean."
+        },
+        {
+          "heuristic": "ArtifactSpecificityIndex",
+          "artifact_id": "poam_batch_2026Q1",
+          "score": 0.0,
+          "evidence": "mechanism_tokens=4; grounding_tokens=26; ratio=6.50 (floor 0.25)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]",
+            "3.3.1[a]"
+          ],
+          "recommendation": "Artifact specificity within expected range."
+        }
+      ]
+    },
+    "ssp_3_1_1_access_control": {
+      "artifact_id": "ssp_3_1_1_access_control",
+      "confidence": "CLEAN",
+      "aggregate_score": 0.0,
+      "findings": [
+        {
+          "heuristic": "SentenceStructureAnomaly",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "n=22 sentences; mean=12.9 words; stdev=9.5; CV=0.739 (threshold 0.45); entropy=3.66 (threshold 2.5)",
+          "nist_objectives": [
+            "3.12.1[a]",
+            "3.12.3[a]"
+          ],
+          "recommendation": "Sentence-structure distribution within human range."
+        },
+        {
+          "heuristic": "MappingDensity",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "control_id_mentions=11; mechanism_tokens=11; ratio=1.00 (threshold 2.0)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]"
+          ],
+          "recommendation": "Mechanism specificity within expected range."
+        },
+        {
+          "heuristic": "PromptLeakage",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "No LLM-residue phrases detected.",
+          "nist_objectives": [
+            "3.12.4[a]"
+          ],
+          "recommendation": "Clean."
+        },
+        {
+          "heuristic": "ArtifactSpecificityIndex",
+          "artifact_id": "ssp_3_1_1_access_control",
+          "score": 0.0,
+          "evidence": "mechanism_tokens=11; grounding_tokens=12; ratio=1.09 (floor 0.25)",
+          "nist_objectives": [
+            "3.12.4[b]",
+            "3.12.4[c]",
+            "3.3.1[a]"
+          ],
+          "recommendation": "Artifact specificity within expected range."
+        }
+      ]
+    }
+  },
+  "input_files": [
+    "au_3_3_1_audit_logging",
+    "poam_batch_2026Q1",
+    "ssp_3_1_1_access_control"
+  ],
+  "timestamp_extracted_artifacts": [
+    "au_3_3_1_audit_logging"
+  ]
+}

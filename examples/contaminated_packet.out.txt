@@ -1,0 +1,40 @@
+Artifact:         PACKET
+Confidence:       LIKELY_SYNTHETIC
+Aggregate Score:  1.0
+Findings (15):
+  [0.00] SentenceStructureAnomaly     on 3.3.1_audit_records.md
+       Insufficient sentences (7); cannot evaluate.
+  [1.00] MappingDensity               on 3.3.1_audit_records.md
+       control_id_mentions=10; mechanism_tokens=0; ratio=10.00 (threshold 2.0)
+       ACTION: High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role.
+  [1.00] PromptLeakage                on 3.3.1_audit_records.md
+       5 leakage signatures matched. Samples: "\\bi('|)m sorry,?\\s+but\\b" -> "I'm sorry, but"; '\\bi cannot (provide|help|assist)\\b' -> 'I cannot provide'; '\\bhere is (a|the) (revised|updated|improved)\\b' -> 'here is the updated'
+       ACTION: CRITICAL: Raw LLM output detected in evidence artifact. Reject artifact and require human-authored replacement. Investigate whether CUI was pasted into a consumer LLM (3.1.3 violation).
+  [0.00] ArtifactSpecificityIndex     on 3.3.1_audit_records.md
+       mechanism_tokens=0 (<4); insufficient signal for grounding analysis.
+  [0.00] SentenceStructureAnomaly     on 3.1.1_access_control.md
+       n=9 sentences; mean=13.7 words; stdev=7.9; CV=0.577 (threshold 0.45); entropy=2.95 (threshold 2.5)
+  [1.00] MappingDensity               on 3.1.1_access_control.md
+       control_id_mentions=14; mechanism_tokens=0; ratio=14.00 (threshold 2.0)
+       ACTION: High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role.
+  [1.00] PromptLeakage                on 3.1.1_access_control.md
+       6 leakage signatures matched. Samples: '\\bas an ai language model\\b' -> 'As an AI language model'; '\\bcertainly!?\\s+here\\b' -> 'Certainly! Here'; '\\bhere is (a|the) (revised|updated|improved)\\b' -> 'Here is the revised'
+       ACTION: CRITICAL: Raw LLM output detected in evidence artifact. Reject artifact and require human-authored replacement. Investigate whether CUI was pasted into a consumer LLM (3.1.3 violation).
+  [0.00] ArtifactSpecificityIndex     on 3.1.1_access_control.md
+       mechanism_tokens=0 (<4); insufficient signal for grounding analysis.
+  [0.00] SentenceStructureAnomaly     on 3.13.1_boundary_protection.md
+       n=8 sentences; mean=13.6 words; stdev=16.0; CV=1.176 (threshold 0.45); entropy=2.75 (threshold 2.5)
+  [1.00] MappingDensity               on 3.13.1_boundary_protection.md
+       control_id_mentions=17; mechanism_tokens=0; ratio=17.00 (threshold 2.0)
+       ACTION: High citation-to-mechanism ratio is a hallmark of AI-drafted SSPs. Require every control narrative to name (a) the tool, (b) a config value, (c) the responsible role.
+  [1.00] PromptLeakage                on 3.13.1_boundary_protection.md
+       3 leakage signatures matched. Samples: '\\bhere is (a|the) (revised|updated|improved)\\b' -> 'Here is the revised'; '\\bplease let me know if\\b' -> 'Please let me know if'; '\\[INSERT [A-Z_ ]+ HERE\\]' -> '[INSERT FIREWALL VENDOR HERE]'
+       ACTION: CRITICAL: Raw LLM output detected in evidence artifact. Reject artifact and require human-authored replacement. Investigate whether CUI was pasted into a consumer LLM (3.1.3 violation).
+  [0.00] ArtifactSpecificityIndex     on 3.13.1_boundary_protection.md
+       mechanism_tokens=0 (<4); insufficient signal for grounding analysis.
+  [0.00] BoilerplateCluster           on 3.3.1_audit_records.md
+       Max Jaccard vs another control: 0.196 (peer=3.13.1_boundary_protection.md)
+  [0.00] BoilerplateCluster           on 3.1.1_access_control.md
+       Max Jaccard vs another control: 0.071 (peer=3.13.1_boundary_protection.md)
+  [0.00] BoilerplateCluster           on 3.13.1_boundary_protection.md
+       Max Jaccard vs another control: 0.196 (peer=3.3.1_audit_records.md)

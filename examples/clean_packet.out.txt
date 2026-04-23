@@ -1,0 +1,34 @@
+Artifact:         PACKET
+Confidence:       CLEAN
+Aggregate Score:  0.16
+Findings (15):
+  [0.08] SentenceStructureAnomaly     on 3.3.1_audit_records.md
+       n=8 sentences; mean=15.2 words; stdev=6.3; CV=0.414 (threshold 0.45); entropy=3.00 (threshold 2.5)
+  [0.00] MappingDensity               on 3.3.1_audit_records.md
+       control_id_mentions=1; mechanism_tokens=9; ratio=0.11 (threshold 2.0)
+  [0.00] PromptLeakage                on 3.3.1_audit_records.md
+       No LLM-residue phrases detected.
+  [0.00] ArtifactSpecificityIndex     on 3.3.1_audit_records.md
+       mechanism_tokens=9; grounding_tokens=7; ratio=0.78 (floor 0.25)
+  [0.07] SentenceStructureAnomaly     on 3.1.1_access_control.md
+       n=8 sentences; mean=15.4 words; stdev=6.4; CV=0.419 (threshold 0.45); entropy=3.00 (threshold 2.5)
+  [0.00] MappingDensity               on 3.1.1_access_control.md
+       control_id_mentions=1; mechanism_tokens=15; ratio=0.07 (threshold 2.0)
+  [0.00] PromptLeakage                on 3.1.1_access_control.md
+       No LLM-residue phrases detected.
+  [0.20] ArtifactSpecificityIndex     on 3.1.1_access_control.md
+       mechanism_tokens=15; grounding_tokens=3; ratio=0.20 (floor 0.25)
+  [0.00] SentenceStructureAnomaly     on 3.13.1_boundary_protection.md
+       n=8 sentences; mean=17.5 words; stdev=8.4; CV=0.480 (threshold 0.45); entropy=2.50 (threshold 2.5)
+  [0.00] MappingDensity               on 3.13.1_boundary_protection.md
+       control_id_mentions=1; mechanism_tokens=8; ratio=0.12 (threshold 2.0)
+  [0.00] PromptLeakage                on 3.13.1_boundary_protection.md
+       No LLM-residue phrases detected.
+  [0.00] ArtifactSpecificityIndex     on 3.13.1_boundary_protection.md
+       mechanism_tokens=8; grounding_tokens=9; ratio=1.12 (floor 0.25)
+  [0.00] BoilerplateCluster           on 3.3.1_audit_records.md
+       Max Jaccard vs another control: 0.000 (peer=None)
+  [0.00] BoilerplateCluster           on 3.1.1_access_control.md
+       Max Jaccard vs another control: 0.000 (peer=None)
+  [0.00] BoilerplateCluster           on 3.13.1_boundary_protection.md
+       Max Jaccard vs another control: 0.000 (peer=None)

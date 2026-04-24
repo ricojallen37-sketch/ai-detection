@@ -48,8 +48,8 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
-# Import Finding from the engine to keep the same return shape.
-from mismatch_engine_ai import Finding
+# Import v1.0-compatible Finding from the engine compat layer.
+from mismatch_engine_ai import LegacyFinding as Finding
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,91 @@
+{
+  "bundle_path": "samples/citation_kill_shot_demo",
+  "documents": [
+    "Policy-AC-001 v2.0",
+    "Policy-AC-002 v1.0",
+    "Procedure-MFA-003 v1.0",
+    "ssp_3_13_1",
+    "ssp_3_1_1",
+    "ssp_3_3_1"
+  ],
+  "edge_counts": {
+    "recycled_authority": 4,
+    "hallucination_kill_shot": 4,
+    "valid": 1,
+    "orphan": 1
+  },
+  "wall_time_ms": 5.45,
+  "verdict": "4 HALLUCINATION_KILL_SHOT \u2014 DISQUALIFYING. 4 RECYCLED_AUTHORITY \u2014 template-reuse suspected. 1 ORPHAN \u2014 uncited artifacts.",
+  "edges": [
+    {
+      "edge_type": "recycled_authority",
+      "source_doc": "Policy-AC-002 v1.0",
+      "target_id": "Policy-AC-001 v2.0",
+      "context": "yconnect_ra_session`.  ## References  - Policy-AC-001 v2.0 (parent policy) - NIST SP 800-171 r2 \u00a73",
+      "reason": "Target 'Policy-AC-001 v2.0' is cited from 3 unrelated control families (AC, AU, SC), suggesting template reuse rather than independent authority."
+    },
+    {
+      "edge_type": "recycled_authority",
+      "source_doc": "ssp_3_13_1",
+      "target_id": "Policy-AC-001 v2.0",
+      "context": "ws the architectural constraints set in Policy-AC-001 v2.0 (access control baseline) and the opera",
+      "reason": "Target 'Policy-AC-001 v2.0' is cited from 3 unrelated control families (AC, AU, SC), suggesting template reuse rather than independent authority."
+    },
+    {
+      "edge_type": "hallucination_kill_shot",
+      "source_doc": "ssp_3_13_1",
+      "target_id": "Runbook-IR-102 v1.0",
+      "context": "d the operational workflow described in Runbook-IR-102 v1.0 for boundary-incident response.  The ex",
+      "reason": "Target 'Runbook-IR-102 v1.0' is named with document-level specificity but does not exist in the contractor's own bundle. Likely fabricated by LLM assistance."
+    },
+    {
+      "edge_type": "recycled_authority",
+      "source_doc": "ssp_3_1_1",
+      "target_id": "Policy-AC-001 v2.0",
+      "context": "d users, and devices in accordance with Policy-AC-001 v2.0 (Access Control Policy). Administrative",
+      "reason": "Target 'Policy-AC-001 v2.0' is cited from 3 unrelated control families (AC, AU, SC), suggesting template reuse rather than independent authority."
+    },
+    {
+      "edge_type": "valid",
+      "source_doc": "ssp_3_1_1",
+      "target_id": "Policy-AC-002 v1.0",
+      "context": "engineers follows the terms set out in Policy-AC-002 v1.0 (Remote Access Standard), which restric",
+      "reason": "Target 'Policy-AC-002 v1.0' resolves to policy_ac_002.md in bundle."
+    },
+    {
+      "edge_type": "hallucination_kill_shot",
+      "source_doc": "ssp_3_1_1",
+      "target_id": "Policy-IA-005 v1.3",
+      "context": "Desk against the workflow documented in Policy-IA-005 v1.3 (Identification and Authentication Poli",
+      "reason": "Target 'Policy-IA-005 v1.3' is named with document-level specificity but does not exist in the contractor's own bundle. Likely fabricated by LLM assistance."
+    },
+    {
+      "edge_type": "hallucination_kill_shot",
+      "source_doc": "ssp_3_1_1",
+      "target_id": "Media Protection Policy v3.1",
+      "context": "yption of CUI in transit is governed by Media Protection Policy v3.1, which requires TLS 1.3 for all northbo",
+      "reason": "Target 'Media Protection Policy v3.1' is named with document-level specificity but does not exist in the contractor's own bundle. Likely fabricated by LLM assistance."
+    },
+    {
+      "edge_type": "recycled_authority",
+      "source_doc": "ssp_3_3_1",
+      "target_id": "Policy-AC-001 v2.0",
+      "context": "activity. Log sources are enumerated in Policy-AC-001 v2.0 as the authoritative baseline for acces",
+      "reason": "Target 'Policy-AC-001 v2.0' is cited from 3 unrelated control families (AC, AU, SC), suggesting template reuse rather than independent authority."
+    },
+    {
+      "edge_type": "hallucination_kill_shot",
+      "source_doc": "ssp_3_3_1",
+      "target_id": "Runbook-IR-102 v1.0",
+      "context": ". Supplementary guidance is provided by Runbook-IR-102 v1.0 for incident-response log correlation w",
+      "reason": "Target 'Runbook-IR-102 v1.0' is named with document-level specificity but does not exist in the contractor's own bundle. Likely fabricated by LLM assistance."
+    },
+    {
+      "edge_type": "orphan",
+      "source_doc": "(bundle)",
+      "target_id": "Procedure-MFA-003 v1.0",
+      "context": "File: procedure_mfa_003.md",
+      "reason": "Document 'Procedure-MFA-003 v1.0' exists in the bundle but is not cited by any SSP, POA&M, or procedure narrative. Assessor will ask why it was submitted."
+    }
+  ]
+}

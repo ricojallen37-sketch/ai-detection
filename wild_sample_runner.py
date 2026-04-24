@@ -24,6 +24,7 @@ Stdlib only.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import sys
@@ -38,6 +39,43 @@ from risk_delta import rollup as risk_rollup  # noqa: E402
 
 WILD_DIR = ENGINE_DIR / "samples" / "wild_samples"
 OUT_JSON = ENGINE_DIR / "wild_sample_report.json"
+
+# Files whose bytes seal the appendix's commitment hash. A buyer who
+# clones the public repo at the same SHA-256 can re-run the runner and
+# get bit-identical verdicts. This answers the v0.5 war panel attack
+# from Gemini: "the provenance chain stops at your laptop." It now
+# stops at a public hash that reproduces deterministically.
+COMMITMENT_FILES = (
+    "mismatch_engine_ai.py",
+    "factual_check.py",
+    "risk_delta.py",
+    "wild_sample_runner.py",
+    "samples/wild_samples/A_generic_llm_ssp.md",
+    "samples/wild_samples/B_human_authored_ssp.md",
+    "samples/wild_samples/C_vendor_template_ssp.md",
+)
+
+
+def compute_commitment_hash() -> tuple[str, list[dict]]:
+    """Deterministic SHA-256 over engine + sample bytes.
+
+    Returns (top_hash_hex, per_file_table) where per_file_table is a list of
+    {'path': relpath, 'sha256': hex} dicts in canonical order.
+
+    Format of the top hash: sha256( for each file in COMMITMENT_FILES order:
+        relpath_bytes || 0x00 || file_sha256_hex_bytes || 0x0a ).
+    """
+    h = hashlib.sha256()
+    table = []
+    for rel in COMMITMENT_FILES:
+        p = ENGINE_DIR / rel
+        file_hash = hashlib.sha256(p.read_bytes()).hexdigest()
+        h.update(rel.encode("utf-8"))
+        h.update(b"\x00")
+        h.update(file_hash.encode("ascii"))
+        h.update(b"\x0a")
+        table.append({"path": rel, "sha256": file_hash})
+    return h.hexdigest(), table
 
 # Strip the preamble block before scoring so we do not contaminate
 # the detector with our own annotation text.
@@ -214,12 +252,16 @@ def main() -> int:
     for aid, text in samples.items():
         results.append(run_one(aid, text, detector, factual))
 
+    commitment_hash, file_table = compute_commitment_hash()
+
     output = {
         "engine_version": "v0.3.1 (factual + risk + rebuttal + 2-tier FCA gate)",
         "runner_version": "wild_sample_runner v2 (dual-mode: whole-file + per-control-packet)",
         "samples_run": [r["artifact_id"] for r in results],
         "sample_descriptions": SAMPLE_DESCRIPTIONS,
         "expected_verdict": EXPECTED_VERDICT,
+        "commitment_hash": commitment_hash,
+        "commitment_files": file_table,
         "results": results,
     }
     OUT_JSON.write_text(json.dumps(output, indent=2, default=str))

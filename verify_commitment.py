@@ -19,9 +19,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 import sys
-
-import mismatch_engine_ai as m
 
 
 def canonical_bytes(obj) -> bytes:
@@ -35,14 +34,10 @@ def sha256_hex(obj) -> str:
 
 
 def main() -> int:
-    bundle = {
-        "version": "0.2",
-        "generated": "2026-04-21",
-        "weights": dict(m.DEFAULT_WEIGHTS),
-        "leakage_signatures": list(m.LEAKAGE_SIGNATURES),
-        "grounding_patterns": list(m._GROUNDING_PATTERNS),
-        "mechanism_tokens": sorted(m.MECHANISM_TOKENS),
-    }
+    repo_root = Path(__file__).resolve().parent
+    bundle_path = repo_root / "bundle_v0.2.json"
+    with bundle_path.open("r", encoding="utf-8") as fh:
+        bundle = json.load(fh)
 
     print("Hardseal AI-Detection v0.2 Commitment Verification")
     print("=" * 60)

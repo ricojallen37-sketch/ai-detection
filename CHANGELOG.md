@@ -5,12 +5,52 @@ here. This project follows semantic versioning.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-24
+
+### Added
+
+1. **SpecificityDeficitDetector**: Flags generic narratives lacking grounding
+   tokens (versions, IPs, paths, ticket IDs, filenames). Targets the most
+   common LLM failure mode: naming mechanisms without operationally grounding
+   them.
+2. **ContradictionDetector**: Cross-control frequency and role contradiction
+   detection (e.g., one control claims "daily review" while another claims
+   "quarterly" for the same process family). Catches coherence failures that
+   signal copy-paste or LLM-generated narratives written without understanding
+   the actual environment.
+3. **StatisticalAnomalyDetector**: Replaces SentenceStructureAnomaly with
+   three sub-signals: sentence-length CV, Shannon entropy, and type-token
+   ratio.
+4. Enriched evidence payloads across all detectors: findings now include
+   structured `evidence` dicts with `why_it_matters`, `remediation`,
+   `confidence`, and detector-specific detail.
+5. Backward-compatibility API layer: `AIProvenanceDetector`, `Confidence`,
+   `Report`, and `LegacyFinding` classes map the v1.0 interface onto v1.1
+   internals so companion tools continue to work.
+6. CLI now accepts directories of `.md`/`.txt` files in addition to JSON.
+7. Schema v2.0.0 (`schema/score_v1.json`) reflecting v1.1 output format.
+
+### Changed
+
+1. **PromptLeakage scoring overhaul**: Max-risk hybrid scoring replaces
+   simple averaging. A single HIGH-severity finding (e.g., "As an AI") can
+   no longer be averaged away by clean controls. Severity override forces
+   package-level tier to ELEVATED minimum.
+2. **Medium pattern demotion**: Single medium-pattern matches (e.g., one
+   "ensure" or "robust") no longer trigger findings. Requires combination
+   signals (2+ medium hits or medium + structural indicator) to reduce
+   false positives.
+3. Detector count increased from 7 to 8.
+4. Test count increased from 65 to 107 (61 core + 6 schema + 22 template guard + 17 risk delta + 1 verifier).
+5. Output format changed from v1.0 Report-style JSON to v1.1 composite-score
+   format with per-detector results. See `schema/score_v1.json`.
+
 ## [0.3.1] - 2026-04-23
 
 ### Released
 
 1. First public open-source release under the MIT License at
-   `github.com/hardseal/ai-detection`. The v0.3.1 tag is the first
+   `github.com/ricojallen37-sketch/ai-detection`. The v0.3.1 tag is the first
    public tag; v0.1.0, v0.2.0, and v0.2.1 are bundled into the initial
    commit history as documentation of the iterative development path.
 2. The combined scoring bundle commitment hash is unchanged from v0.2:
@@ -107,7 +147,7 @@ the companion paper, Section 9 through Section 13.
 ### Prepared
 
 1. Public open-source release under the MIT License prepared for push
-   to `github.com/hardseal/ai-detection`.
+   to `github.com/ricojallen37-sketch/ai-detection`.
 2. Internal `v0.2.1` tag. The `v0.2.0` tag from 2026-04-21 was the
    internal scoring-bundle release; `v0.2.1` bundled the three hardening
    docs. Scoring logic, weights, regex bundles, and commitment hashes

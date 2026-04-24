@@ -69,8 +69,8 @@ owner (Rico Allen, solo founder) and a dated checkpoint.
 
 ## 5. Thirty-day anchor moves (April 23 through May 23, 2026)
 
-1. Push `github.com/hardseal/ai-detection` public on April 23 with the
-   MIT license, the v0.2 commitment hash, the full 65-test suite, the
+1. Push `github.com/ricojallen37-sketch/ai-detection` public on April 23 with the
+   MIT license, the v0.2 commitment hash, the full 107-test suite, the
    three hardening docs (`REGULATORY_DISCLAIMER.md`, `SUPPORT.md`, this
    file), and the v0.3.1 FCA Risk Delta plus wild-sample closed-loop
    validation.

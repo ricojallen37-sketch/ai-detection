@@ -1,8 +1,8 @@
 # Hardseal AI-Era Evidence Contamination Detector
 
-**Version:** v0.3.1 (April 23, 2026). TemplateGuard + ArtifactSpecificityIndex + two-tier FCA Risk Delta + wild-sample validation.
-**Status:** 65 tests passing. CLI working. 7-heuristic engine. Weight rebalance applied.
-**License:** [MIT](LICENSE). Public release April 23, 2026.
+**Version:** v1.1 (April 24, 2026). 8 detectors, 107 tests, stdlib-only.
+**Status:** 107 tests passing. CLI working. 8-detector engine with enriched evidence and backward-compat API.
+**License:** [MIT](LICENSE). Public release April 2026.
 
 ## Who this is for
 
@@ -16,7 +16,7 @@
 Python 3.10 or newer. No dependencies. Engine operates locally with no outbound telemetry or external API calls.
 
 ```
-git clone https://github.com/hardseal/ai-detection.git
+git clone https://github.com/ricojallen37-sketch/ai-detection.git
 cd ai-detection
 
 # 1. A clean, human-authored packet.
@@ -34,6 +34,8 @@ python3 mismatch_engine_ai.py samples/templated_legitimate_packet \
 ```
 
 Full CLI and JSON output reference: [USAGE_GUIDE.md](USAGE_GUIDE.md).
+JSON output stability contract: [schema/score_v1.json](schema/score_v1.json).
+How to prep `.pdf`, `.docx`, `.xlsx` evidence into engine-ready text: [DATA_PREP.md](DATA_PREP.md).
 How to defeat each detector on purpose: [KNOWN_BYPASSES.md](KNOWN_BYPASSES.md).
 
 **DIB contractor who wants a redacted review instead of running this yourself?** Email `rico@hardseal.ai` with subject line `[DIB]`. The first five readiness-pack integrity scans this month are free: three redacted narratives in; one-page memo plus a 15-minute call.
@@ -141,26 +143,24 @@ compliance platform detects it *before* submission.
 This module is the first open-source detection engine purpose-built for
 CMMC Level 2 evidence packets.
 
-It is Hardseal's wedge into the trust layer of AI-era defense compliance.
-
 ---
 
 ## What it does
 
-Seven stdlib-only detection heuristics, orchestrated into a single
-`Confidence` verdict per artifact or packet:
+Eight stdlib-only detectors, orchestrated into a composite score with severity tier:
 
-| # | Heuristic | Signal |
+| # | Detector | Signal |
 |---|---|---|
-| 1 | SentenceStructureAnomaly | Coefficient of variation + Shannon entropy of sentence lengths |
-| 2 | BoilerplateCluster | k-shingle Jaccard similarity across control narratives |
+| 1 | BoilerplateClustering | k-shingle Jaccard similarity across control narratives |
+| 2 | PromptLeakage | Regex hits against curated LLM-residue phrases; max-risk hybrid scoring with severity override |
 | 3 | TimestampRegularity | VMR of log inter-arrival times + round-second rounding rate |
 | 4 | MappingDensity | Ratio of control-ID mentions to mechanism/tool tokens |
 | 5 | CitationGraph | Max depth, orphan rate, cycle count across evidence artifacts |
-| 6 | PromptLeakage | Regex hits against a curated list of LLM-residue phrases |
-| 7 | ArtifactSpecificityIndex | Ratio of grounding tokens (versions, hashes, IPs, paths, ticket IDs, emails, dates, filenames) to named mechanisms. LLMs name; they do not ground. |
+| 6 | StatisticalAnomaly | Sentence-length CV, Shannon entropy, and type-token ratio |
+| 7 | SpecificityDeficit | Flags generic narratives lacking grounding tokens (versions, IPs, paths, ticket IDs, filenames) |
+| 8 | ContradictionDetection | Cross-control frequency and role contradictions (e.g., "daily" vs "quarterly" for same process) |
 
-**v0.2 weight rebalance** (per war-panel rationale): PromptLeakage 0.25 to 0.15 (easy to scrub), TimestampRegularity 0.20 to 0.25 (structural signal is harder to fake), ArtifactSpecificityIndex new at 0.20.
+**v1.1 improvements:** PromptLeakage max-risk hybrid scoring (severe findings can no longer be averaged away), enriched evidence payloads across all detectors, medium-pattern demotion to reduce false positives, and severity override forcing package-level escalation on HIGH-severity findings.
 
 See `THREAT_MODEL.md` for per-heuristic attack mapping, NIST 800-171A
 objective coverage, Security+ domain alignment, and the assessor question
@@ -178,7 +178,7 @@ each heuristic answers.
 | `CONTRIBUTING.md` | Contribution guide. Stdlib-only is non-negotiable. |
 | `CHANGELOG.md` | Versioned change log |
 | `THREAT_MODEL.md` | Full threat model, kill chain, heuristic design rationale, honest limits, roadmap |
-| `mismatch_engine_ai.py` | Main engine. Stdlib-only. 7 heuristics + TemplateGuard wiring. |
+| `mismatch_engine_ai.py` | Main engine. Stdlib-only. 8 detectors + v1.0 backward-compat API. |
 | `template_guard.py` | v0.2 Template False-Positive Guard. NIST/CMMC stock-phrase whitelist + user-template shingle ingestion. |
 | `verify_commitment.py` | Reproduces the commitment hashes from the live module state |
 | `bundle_v0.2.canonical.json` | Canonical bundle artifact, byte-for-byte hashable |
@@ -189,17 +189,17 @@ each heuristic answers.
 | `wild_sample_runner.py` | v0.3.1 dual-mode runner for SSP excerpts Hardseal did not author. Whole-file + per-control analysis. |
 | `build_wild_sample_appendix.py` | Renders `WILD_SAMPLE_APPENDIX.md` from `wild_sample_report.json`. |
 | `WILD_SAMPLE_APPENDIX.md` | One-page buyer-facing appendix for the Falcon Edge v2 integrity report. |
-| `test_mismatch_engine_ai.py` | 26 unit tests covering v0.1 heuristics and orchestrator |
-| `test_template_guard.py` | 22 unit + integration tests covering v0.2 TemplateGuard contract |
-| `test_risk_delta.py` | 17 unit tests covering the v0.3.1 two-tier FCA gate |
+| `test_mismatch_engine_ai.py` | 61 unit tests covering all 8 detectors and orchestrator |
+| `test_schema.py` | 6 schema regression tests validating CLI JSON output against `schema/score_v1.json` |
+| `test_template_guard.py` | 22 unit + integration tests covering TemplateGuard contract |
+| `test_risk_delta.py` | 17 unit tests covering the two-tier FCA gate |
+| `test_verify_commitment.py` | 1 regression test proving the commitment verifier runs against the current engine API |
 | `.github/workflows/ci.yml` | GitHub Actions CI (tests + commitment hash + CLI demos on Python 3.10 / 3.11 / 3.12) |
 | `samples/clean_packet/` | 3 hand-authored SSP narratives (3.1.1, 3.13.1, 3.3.1) with mechanism specifics |
 | `samples/contaminated_packet/` | 3 parallel narratives deliberately built from LLM output |
 | `samples/templated_legitimate_packet/` | **v0.2 regression sample.** 3 controls sharing a consultant skeleton + the skeleton itself (`_TEMPLATE_SKELETON.md`). Pass via `--template` to clear. |
 | `samples/wild_samples/` | **v0.3.1 closed-loop corpus.** Three SSP excerpts not authored by Hardseal: A (generic LLM), B (human-authored NIST), C (vendor-template boilerplate). |
-| `docs/internal/` | Outbound templates and versioned red-team prompts used during development. |
 | `paper/STATE-OF-AI-ERA-COMPLIANCE-EVIDENCE.md` | Companion technical paper: *State of AI-Era Defense Compliance Evidence* |
-| `paper/outreach/` | Draft outreach to C3PAOs and MSP integrators |
 
 ---
 
@@ -208,10 +208,10 @@ each heuristic answers.
 ### Run the tests
 
 ```
-python3 -m unittest test_mismatch_engine_ai test_template_guard test_risk_delta -v
+python3 -m unittest test_mismatch_engine_ai test_template_guard test_risk_delta test_schema test_verify_commitment -v
 ```
 
-Expected output: **65 tests pass** on Python 3.10, 3.11, and 3.12.
+Expected output: **107 tests pass** on Python 3.10, 3.11, and 3.12.
 
 ### CLI on a single artifact
 
@@ -329,8 +329,6 @@ excluded from the whitelist.
 | Field Report: *State of AI-Era Defense Compliance Evidence* (Paper) | TARGET April 27, 2026 |
 | v0.4 shipping the five remaining detectors published in the paper | TARGET end of May 2026 |
 | Conference Demo: *AI-Era Attacks on CMMC Evidence* (Stage) | TARGET Q1 2027 |
-
-Code, Paper, Stage. Own the trust layer of AI-era defense compliance.
 
 ---
 

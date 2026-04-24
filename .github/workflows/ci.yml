@@ -28,7 +28,7 @@ jobs:
           python3 -c "import mismatch_engine_ai, template_guard, risk_delta, verify_commitment; print('imports ok')"
 
       - name: Run test suite
-        run: python3 -m unittest test_mismatch_engine_ai test_template_guard test_risk_delta -v
+        run: python3 -m unittest test_mismatch_engine_ai test_template_guard test_risk_delta test_schema test_verify_commitment -v
 
       - name: Verify commitment hashes
         run: python3 verify_commitment.py

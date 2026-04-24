@@ -93,6 +93,33 @@ output are available under `samples/wild_samples/` and `wild_sample_report.json`
 in the engine repository. Independent reruns should produce identical numeric
 scores on the same engine version.
 
+**Wild-sample reproducibility hash (SHA-256):**
+`7ef67e69700f0c02086633814b231b3094938b2433855c4d2057ba9977d66b9a`
+
+This hash seals the bytes of the four engine modules
+(`mismatch_engine_ai.py`, `factual_check.py`, `risk_delta.py`,
+`wild_sample_runner.py`) and the three wild sample files
+(`samples/wild_samples/A_generic_llm_ssp.md`,
+`samples/wild_samples/B_human_authored_ssp.md`,
+`samples/wild_samples/C_vendor_template_ssp.md`). A clone of the repo at
+this hash will, on `python3 wild_sample_runner.py`, produce a
+`wild_sample_report.json` whose `commitment_hash` field reads identical
+to the value above. Any byte change in any of those seven files changes
+the hash.
+
+**This is distinct from the canonical scoring-bundle commitment hash:**
+`32f1e682b0544b1af20077cc33f0604ec76238489182190c8d77a1cb01f42bbf`
+
+The canonical bundle hash has been published since v0.2.0 and covers the
+scoring weights, regex patterns, and mechanism tokens that drive the
+detector. It is verifiable independently via `python3
+verify_commitment.py`. The bundle hash answers "did the scoring logic
+change?" The wild-sample reproducibility hash above answers "did the
+specific run that produced this appendix use the engine source and
+samples I think it did?" Both are required for full chain-of-custody:
+the bundle hash for scoring integrity, the run hash for appendix
+reproducibility.
+
 ---
 
 *Hardseal AI Evidence Integrity Report is a point-in-time diagnostic. It does

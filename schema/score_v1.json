@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hardseal.ai/schema/score_v2.json",
+  "title": "Hardseal AI-Detection Score Output v2",
+  "description": "Machine-readable contract for the JSON output of mismatch_engine_ai.py v1.1+. This schema is the stability contract for v1.1.x forward. Fields listed here will not be renamed or removed inside a major version. New fields may be added; consumers must ignore unknown fields.",
+  "version": "2.0.0",
+  "engine_version_range": "1.1.x and forward-compatible through 2.x",
+  "type": "object",
+  "required": ["engine_version", "composite_score", "severity_tier", "detectors", "narratives_scanned", "detector_count"],
+  "additionalProperties": true,
+  "properties": {
+    "engine_version": {
+      "type": "string",
+      "description": "Semantic version of the engine that produced this output."
+    },
+    "composite_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Weighted composite of all detector scores. Range 0.0 to 1.0."
+    },
+    "severity_tier": {
+      "type": "string",
+      "enum": ["LOW", "ELEVATED", "HIGH", "CRITICAL"],
+      "description": "Human-readable severity classification derived from composite_score."
+    },
+    "detectors": {
+      "type": "array",
+      "description": "Per-detector results. One entry per detector that ran.",
+      "items": {
+        "type": "object",
+        "required": ["name", "score", "findings"],
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "BoilerplateClustering",
+              "PromptLeakage",
+              "TimestampRegularity",
+              "MappingDensity",
+              "CitationGraph",
+              "StatisticalAnomaly",
+              "SpecificityDeficit",
+              "ContradictionDetection"
+            ],
+            "description": "Name of the detector. Names are the stability lock; they will not be renamed within the major version."
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Detector score in range 0.0 (no signal) to 1.0 (maximum signal)."
+          },
+          "findings": {
+            "type": "array",
+            "description": "Individual findings from this detector. Empty array when no signal detected.",
+            "items": {
+              "type": "object",
+              "required": ["severity", "score", "description"],
+              "additionalProperties": true,
+              "properties": {
+                "severity": {
+                  "type": "string",
+                  "enum": ["LOW", "MEDIUM", "HIGH"],
+                  "description": "Severity classification of this finding."
+                },
+                "score": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0,
+                  "description": "Finding-level score."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Human-readable explanation of the finding."
+                },
+                "evidence": {
+                  "type": "object",
+                  "description": "Structured evidence payload. Shape varies by detector.",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "weights": {
+      "type": "object",
+      "description": "Detector weight configuration used for this run.",
+      "additionalProperties": true
+    },
+    "narratives_scanned": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of narrative texts scanned."
+    },
+    "detector_count": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of detectors that ran."
+    }
+  }
+}

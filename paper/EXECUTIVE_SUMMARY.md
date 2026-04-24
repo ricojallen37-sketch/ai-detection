@@ -128,7 +128,9 @@ outputs committed in `examples/`.
 ## What to do until April 27
 
 1. Clone this repository. Run `python3 -m unittest
-   test_mismatch_engine_ai.py`. Confirm 65 tests pass.
+   test_mismatch_engine_ai test_template_guard test_risk_delta test_schema
+   test_verify_commitment -v`.
+   Confirm 107 tests pass.
 2. Run the engine against the three sample packets. Confirm the expected
    outputs (CLEAN at 0.16, LIKELY_SYNTHETIC at 1.00, CLEAN at 0.00 with
    template guard).

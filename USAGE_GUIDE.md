@@ -13,12 +13,12 @@ Requires Python 3.10 or newer. No third-party dependencies. No network
 calls. No telemetry.
 
 ```
-git clone https://github.com/hardseal/ai-detection.git
+git clone https://github.com/ricojallen37-sketch/ai-detection.git
 cd ai-detection
-python3 -m unittest test_mismatch_engine_ai.py
+python3 -m unittest test_mismatch_engine_ai test_template_guard test_risk_delta test_schema test_verify_commitment -v
 ```
 
-All 65 tests must pass before you trust an output.
+All 107 tests must pass before you trust an output.
 
 ---
 
@@ -120,97 +120,72 @@ consultant to resolve in review.
 
 ## Annotated JSON output
 
-Example from the contaminated sample packet. Comments are inline for
-documentation. The engine does not emit comments in production JSON.
+Example from the contaminated sample packet. Schema contract:
+[`schema/score_v1.json`](schema/score_v1.json). Comments below are for
+documentation only; the engine does not emit comments in production
+JSON.
 
 ```jsonc
 {
+  "artifact_id": "PACKET",
+  // The identifier of the artifact or packet analyzed. 'PACKET' when a
+  // directory is passed. Otherwise the file basename.
+
   "confidence": "LIKELY_SYNTHETIC",
   // One of: CLEAN, PARTIALLY_CONTAMINATED, CONTAMINATED, LIKELY_SYNTHETIC.
+  // CLEAN does not mean "safe for CMMC L2". See Do/Don't table above.
 
   "aggregate_score": 1.0,
-  // Weighted average across all firing detectors. Range 0.0 to 1.0.
-
-  "strong_signals": 3,
-  // Number of detectors that fired with score >= 0.70. Two or more
-  // strong signals force LIKELY_SYNTHETIC regardless of aggregate.
+  // Weighted average across all heuristics. Range 0.0 to 1.0.
+  // Boundaries: [0.0, 0.2) CLEAN, [0.2, 0.4) PARTIALLY_CONTAMINATED,
+  // [0.4, 0.65) CONTAMINATED, [0.65, 1.0] LIKELY_SYNTHETIC.
+  // Two or more strong signals (score >= 0.70) force LIKELY_SYNTHETIC.
 
   "findings": [
     {
-      "detector": "PromptLeakage",
-      // H6. Near-certain signal. A single fire is near-proof of an
-      // un-edited LLM paste.
+      "heuristic": "PromptLeakage",
+      // One of: SentenceStructureAnomaly, BoilerplateCluster,
+      // TimestampRegularity, MappingDensity, CitationGraph,
+      // PromptLeakage, ArtifactSpecificityIndex.
+
+      "artifact_id": "3.1.1_access_control.md",
+      // The sub-artifact file the heuristic evaluated.
 
       "score": 1.0,
-      // 1.0 means one or more residue phrases matched.
+      // 0.0 (no signal) to 1.0 (max signal). >= 0.70 is a strong signal.
 
-      "strong": true,
+      "evidence": "3 leakage signatures matched. Samples: 'As an AI language model' -> '...', '[INSERT FIREWALL VENDOR HERE]' -> '...'",
+      // Human-readable detail. Numeric thresholds + example matches.
 
-      "evidence": [
-        {
-          "artifact": "3.1.1_access_control.md",
-          "line": 4,
-          "match": "As an AI language model, I can help draft..."
-        }
-      ],
-      // Each evidence entry points to the exact artifact and line.
+      "nist_objectives": ["3.12.4[a]"],
+      // NIST 800-171A assessment objectives this heuristic maps to.
 
-      "nist_objective": "3.12.4[a]",
-      // NIST 800-171A assessment objective this detector maps to.
-
-      "securityplus_domain": "5.4",
-      // CompTIA Security+ SY0-701 domain.
-
-      "assessor_question": "Why does your access control policy contain the phrase 'As an AI language model'?"
-      // The question a C3PAO will ask if this is not fixed.
+      "recommendation": "CRITICAL: Raw LLM output detected in evidence artifact. Reject artifact and require human-authored replacement. Investigate whether CUI was pasted into a consumer LLM (3.1.3 violation)."
+      // Concrete action the contractor should take.
     },
     {
-      "detector": "ArtifactSpecificityIndex",
+      "heuristic": "ArtifactSpecificityIndex",
+      "artifact_id": "3.13.1_boundary_protection.md",
       "score": 0.92,
-      "strong": true,
-      "evidence": [
-        {
-          "artifact": "3.13.1_boundary_protection.md",
-          "reason": "Zero grounding tokens (no versions, hashes, IPs, paths, tickets, dates, filenames). Four named mechanisms."
-        }
-      ],
-      "nist_objective": "3.12.4[b]",
-      "securityplus_domain": "1.3",
-      "assessor_question": "Show me the firewall configuration and the ticket that documents the last change."
+      "evidence": "mechanism_tokens=4; grounding_tokens=0; ratio=0.00 (floor 0.25)",
+      "nist_objectives": ["3.12.4[b]", "3.12.4[c]"],
+      "recommendation": "Narrative names mechanisms but grounds none. Add versions, hashes, IPs, paths, tickets, dates, or filenames."
     },
     {
-      "detector": "BoilerplateCluster",
+      "heuristic": "BoilerplateCluster",
+      "artifact_id": "3.1.1_access_control.md",
       "score": 0.78,
-      "strong": true,
-      "evidence": [
-        {
-          "pair": ["3.1.1_access_control.md", "3.13.1_boundary_protection.md"],
-          "jaccard": 0.78,
-          "shingle_size": 5
-        }
-      ],
-      "nist_objective": "3.12.4[a]",
-      "securityplus_domain": "5.4",
-      "assessor_question": "Why does 3.1.1 (access control) read identical to 3.13.1 (boundary protection)? They protect different things."
+      "evidence": "Max Jaccard vs another control: 0.780 (peer=3.13.1_boundary_protection.md, k=5)",
+      "nist_objectives": ["3.12.4[a]"],
+      "recommendation": "High cross-control similarity. Rewrite each control narrative to describe its specific mechanism."
     }
-  ],
-
-  "template_guard": {
-    "applied": false,
-    "templates_ingested": 0,
-    "phrases_whitelisted": 47
-    // Count of NIST/CMMC stock phrases stripped before flatness analysis.
-    // LEAKAGE phrases are excluded from the whitelist.
-  },
-
-  "runtime_ms": 142,
-
-  "engine_version": "0.2",
-  "commitment_hash": "32f1e682b0544b1af20077cc33f0604ec76238489182190c8d77a1cb01f42bbf"
-  // The combined canonical bundle hash. Use verify_commitment.py to
-  // confirm the engine you ran matches the bundle published in v0.2.
+  ]
 }
 ```
+
+This output conforms to `schema/score_v1.json`. Validate with any JSON
+Schema draft-2020-12 validator, or with the stdlib-only structural
+check shown in [`schema/README.md`](schema/README.md).
 
 ---
 
